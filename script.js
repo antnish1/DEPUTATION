@@ -103,17 +103,23 @@ function highlightMissing() {
 
 
 function saveEngineer(branch, engineer, id) {
+  const machineNo = document.getElementById(`${id}_machine`).value;
+
+  if (!machineNo) {
+    alert("Machine Number is mandatory ❗");
+    return;
+  }
+
   const payload = {
     officeLocation: branch,
     engineerName: engineer,
-
     workshopOnsite: document.getElementById(`${id}_workshop`).value,
     callType: document.getElementById(`${id}_callType`).value,
     primarySecondary: document.getElementById(`${id}_primary`).value,
     complaint: document.getElementById(`${id}_complaint`).value,
     customerName: document.getElementById(`${id}_customer`).value,
     contactNumber: document.getElementById(`${id}_contact`).value,
-    machineNo: document.getElementById(`${id}_machine`).value,
+    machineNo: machineNo,
     hmr: document.getElementById(`${id}_hmr`).value,
     breakdownStatus: document.getElementById(`${id}_breakdown`).value,
     siteLocation: document.getElementById(`${id}_siteLocation`).value,
@@ -128,8 +134,15 @@ function saveEngineer(branch, engineer, id) {
     body: JSON.stringify(payload)
   })
     .then(res => res.json())
-    .then(() => alert(`${engineer} saved ✔️`));
+    .then(response => {
+      if (response.status === "duplicate") {
+        showDuplicatePopup(response.engineer, response.machine);
+      } else {
+        alert(`${engineer} saved ✔️`);
+      }
+    });
 }
+
 
 
 function saveAll() {
