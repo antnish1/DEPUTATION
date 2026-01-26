@@ -5,9 +5,19 @@ function loadBranch(branch) {
   document.getElementById("engineerContainer").innerHTML = "Loading...";
 
   fetch(`${API_URL}?action=getEngineers&location=${branch}`)
-    .then(res => res.json())
-    .then(engineers => renderEngineers(branch, engineers));
+    .then(res => res.text())
+    .then(data => {
+      console.log("RAW RESPONSE:", data);
+      const engineers = JSON.parse(data);
+      renderEngineers(branch, engineers);
+    })
+    .catch(err => {
+      console.error("Fetch error:", err);
+      document.getElementById("engineerContainer").innerHTML =
+        "❌ Failed to load engineers";
+    });
 }
+
 
 function renderEngineers(branch, engineers) {
   const container = document.getElementById("engineerContainer");
