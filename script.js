@@ -25,17 +25,19 @@ function renderEngineers(branch, engineers) {
   const container = document.getElementById("engineerContainer");
   container.innerHTML = "";
 
-  engineers.forEach(engineer => {
+  engineers.forEach((engineer, index) => {
+    const safeId = "eng_" + index;
+
     container.innerHTML += `
       <div class="engineer-card">
         <h4>${engineer}</h4>
 
-        <input placeholder="Customer Name" id="customer_${engineer}" />
-        <input placeholder="Contact Number" id="contact_${engineer}" />
-        <input placeholder="Complaint" id="complaint_${engineer}" />
-        <input placeholder="Machine No" id="machine_${engineer}" />
+        <input id="${safeId}_customer" placeholder="Customer Name">
+        <input id="${safeId}_contact" placeholder="Contact Number">
+        <input id="${safeId}_complaint" placeholder="Complaint">
+        <input id="${safeId}_machine" placeholder="Machine No">
 
-        <button onclick="saveEngineer('${branch}', '${engineer}')">
+        <button onclick="saveEngineer('${branch}','${engineer}','${safeId}')">
           Save
         </button>
       </div>
@@ -43,14 +45,15 @@ function renderEngineers(branch, engineers) {
   });
 }
 
-function saveEngineer(branch, engineer) {
+
+function saveEngineer(branch, engineer, safeId) {
   const payload = {
     officeLocation: branch,
     engineerName: engineer,
-    customerName: document.getElementById(`customer_${engineer}`).value,
-    contactNumber: document.getElementById(`contact_${engineer}`).value,
-    complaint: document.getElementById(`complaint_${engineer}`).value,
-    machineNo: document.getElementById(`machine_${engineer}`).value
+    customerName: document.getElementById(`${safeId}_customer`).value,
+    contactNumber: document.getElementById(`${safeId}_contact`).value,
+    complaint: document.getElementById(`${safeId}_complaint`).value,
+    machineNo: document.getElementById(`${safeId}_machine`).value
   };
 
   fetch(API_URL, {
