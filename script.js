@@ -168,7 +168,3 @@ function saveAll() {
 }
 
 
-window[callbackName] = function (engineers) {
-  renderEngineers(branch, engineers);
-  highlightMissing();
-};
