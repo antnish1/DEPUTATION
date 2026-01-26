@@ -4,15 +4,21 @@ function loadBranch(branch) {
   document.getElementById("branchTitle").innerText = branch;
   document.getElementById("engineerContainer").innerHTML = "Loading...";
 
-  fetch(`${API_URL}?action=getEngineers&location=${encodeURIComponent(branch)}`)
-    .then(res => res.json())
-    .then(engineers => renderEngineers(branch, engineers))
-    .catch(err => {
-      console.error(err);
-      document.getElementById("engineerContainer").innerHTML =
-        "❌ Failed to load engineers";
-    });
+  const callbackName = "handleEngineers";
+  window[callbackName] = function (engineers) {
+    renderEngineers(branch, engineers);
+  };
+
+  const script = document.createElement("script");
+  script.src =
+    API_URL +
+    "?action=getEngineers" +
+    "&location=" + encodeURIComponent(branch) +
+    "&callback=" + callbackName;
+
+  document.body.appendChild(script);
 }
+
 
 
 function renderEngineers(branch, engineers) {
