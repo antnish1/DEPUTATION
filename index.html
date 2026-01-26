@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Service Engineer Deputation</title>
+  <title>Branch-wise Engineer Deputation</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<h2>Engineer Deputation Form</h2>
+<div class="container">
 
-<select id="location">
-  <option value="">Select Location</option>
-  <option>DAMOH</option>
-  <option>DINDORI</option>
-  <option>SEONI</option>
-  <option>ANUPPUR</option>
-  <option>BALAGHAT</option>
-  <option>KATNI</option>
-  <option>JABALPUR BHL</option>
-  <option>MANDLA</option>
-  <option>NARSINGHPUR</option>
-  <option>JABALPUR HL</option>
-</select>
+  <!-- LEFT PANEL -->
+  <div class="sidebar">
+    <h3>Branches</h3>
+    <ul id="branchList">
+      <li onclick="loadBranch('DAMOH')">DAMOH</li>
+      <li onclick="loadBranch('DINDORI')">DINDORI</li>
+      <li onclick="loadBranch('SEONI')">SEONI</li>
+      <li onclick="loadBranch('ANUPPUR')">ANUPPUR</li>
+      <li onclick="loadBranch('BALAGHAT')">BALAGHAT</li>
+      <li onclick="loadBranch('KATNI')">KATNI</li>
+      <li onclick="loadBranch('JABALPUR BHL')">JABALPUR BHL</li>
+      <li onclick="loadBranch('MANDLA')">MANDLA</li>
+      <li onclick="loadBranch('NARSINGHPUR')">NARSINGHPUR</li>
+      <li onclick="loadBranch('JABALPUR HL')">JABALPUR HL</li>
+    </ul>
+  </div>
 
-<select id="engineer">
-  <option value="">Select Engineer</option>
-</select>
+  <!-- RIGHT PANEL -->
+  <div class="content">
+    <h2 id="branchTitle">Select a Branch</h2>
+    <div id="engineerContainer"></div>
+  </div>
 
-<input placeholder="Customer Name" id="customerName" />
-<input placeholder="Contact Number" id="contactNumber" />
-<input placeholder="Complaint" id="complaint" />
-
-<button onclick="submitForm()">Submit</button>
+</div>
 
 <script src="script.js"></script>
 </body>
