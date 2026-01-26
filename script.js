@@ -1,4 +1,5 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbwNibttN_UDKbhMsva3n6qZkbVlx45svpO5BZ7xe9e39Q-qRSwN7rv4_0SCyNWASvdm2A/exec";
+let currentCallbackName = null;
 
 function loadBranch(branch) {
   document.getElementById("branchTitle").innerText = branch;
