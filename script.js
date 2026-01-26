@@ -145,6 +145,18 @@ function saveEngineer(branch, engineer, id) {
 
 
 
+function showDuplicatePopup(engineer, machine) {
+  document.getElementById("popupText").innerText =
+    `${engineer} has already been deputed for ${machine} today`;
+
+  document.getElementById("popup").classList.remove("hidden");
+}
+
+function closePopup() {
+  document.getElementById("popup").classList.add("hidden");
+}
+
+
 function saveAll() {
   document.querySelectorAll(".engineer-card button")
     .forEach(btn => btn.click());
