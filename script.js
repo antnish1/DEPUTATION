@@ -29,29 +29,26 @@ function renderEngineers(branch, engineers) {
   engineers.forEach((engineer, index) => {
     const safeId = "eng_" + index;
 
-    container.innerHTML += `
-      <div class="engineer-card">
-        <h4>${engineer}</h4>
+    const card = document.createElement("div");
+    card.className = "engineer-card";
 
-        <input id="${safeId}_customer" placeholder="Customer Name">
-        <input id="${safeId}_contact" placeholder="Contact Number">
-        <input id="${safeId}_complaint" placeholder="Complaint">
-        <input id="${safeId}_machine" placeholder="Machine No">
+    card.innerHTML = `
+      <h4>${engineer}</h4>
 
-        
-          if (!document.getElementById(`${safeId}_customer`).value) {
-            document.querySelector(`#${safeId}_customer`)
-              .closest(".engineer-card")
-              .classList.add("missing");
-          }
+      <input id="${safeId}_customer" placeholder="Customer Name">
+      <input id="${safeId}_contact" placeholder="Contact Number">
+      <input id="${safeId}_complaint" placeholder="Complaint">
+      <input id="${safeId}_machine" placeholder="Machine No">
 
-        <button onclick="saveEngineer('${branch}','${engineer}','${safeId}')">
-          Save
-        </button>
-      </div>
+      <button onclick="saveEngineer('${branch}','${engineer}','${safeId}')">
+        Save
+      </button>
     `;
+
+    container.appendChild(card);
   });
 }
+
 
 
 function saveEngineer(branch, engineer, safeId) {
