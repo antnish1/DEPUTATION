@@ -13,13 +13,35 @@ document.getElementById("location").addEventListener("change", function () {
 });
 
 function submitForm() {
-  const payload = {
-    location: document.getElementById("location").value,
-    engineer: document.getElementById("engineer").value,
-    customerName: document.getElementById("customerName").value,
-    contactNumber: document.getElementById("contactNumber").value,
-    complaint: document.getElementById("complaint").value
-  };
+    const payload = {
+      officeLocation: location.value,
+      engineerName: engineer.value,
+      workshopOnsite: workshopOnsite.value,
+      callType: callType.value,
+      primarySecondary: primarySecondary.value,
+      complaint: complaint.value,
+      customerName: customerName.value,
+      contactNumber: contactNumber.value,
+      machineNo: machineNo.value,
+      hmr: hmr.value,
+      breakdownStatus: breakdownStatus.value,
+      complaintDate: complaintDate.value,
+      complaintTime: complaintTime.value,
+      siteLocation: siteLocation.value,
+      deputationDate: deputationDate.value,
+      deputationTime: deputationTime.value,
+      engineerOnsiteTime: engineerOnsiteTime.value,
+      workCompletionDate: workCompletionDate.value,
+      workCompletionTime: workCompletionTime.value,
+      callId: callId.value,
+      labourCharge: labourCharge.value,
+      siteDistance: siteDistance.value,
+      daApplied: daApplied.value,
+      taApproved: taApproved.value,
+      daApproved: daApproved.value,
+      totalAllowances: totalAllowances.value
+    };
+
 
   fetch(API_URL, {
     method: "POST",
