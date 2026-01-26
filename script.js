@@ -27,7 +27,7 @@ function renderEngineers(branch, engineers) {
   container.innerHTML = "";
 
   engineers.forEach((engineer, index) => {
-    const safeId = "eng_" + index;
+    const id = "eng_" + index;
 
     const card = document.createElement("div");
     card.className = "engineer-card";
@@ -35,12 +35,54 @@ function renderEngineers(branch, engineers) {
     card.innerHTML = `
       <h4>${engineer}</h4>
 
-      <input id="${safeId}_customer" placeholder="Customer Name">
-      <input id="${safeId}_contact" placeholder="Contact Number">
-      <input id="${safeId}_complaint" placeholder="Complaint">
-      <input id="${safeId}_machine" placeholder="Machine No">
+      <select id="${id}_workshop">
+        <option value="">Workshop / Onsite</option>
+        <option>Workshop</option>
+        <option>Onsite</option>
+        <option>Free</option>
+      </select>
 
-      <button onclick="saveEngineer('${branch}','${engineer}','${safeId}')">
+      <select id="${id}_callType">
+        <option value="">Call Type</option>
+        <option>U/W</option>
+        <option>B/W</option>
+        <option>P/T</option>
+        <option>P/W</option>
+        <option>JCB CARE</option>
+        <option>ASC</option>
+        <option>Goodwill</option>
+      </select>
+
+      <select id="${id}_primary">
+        <option value="">Primary / Secondary</option>
+        <option>Primary</option>
+        <option>Secondary</option>
+      </select>
+
+      <input id="${id}_complaint" placeholder="Complaint">
+      <input id="${id}_customer" placeholder="Customer Name">
+      <input id="${id}_contact" placeholder="Contact Number">
+      <input id="${id}_machine" placeholder="Machine No">
+      <input id="${id}_hmr" placeholder="HMR">
+
+      <select id="${id}_breakdown">
+        <option value="">Breakdown Status</option>
+        <option>Running With Problem</option>
+        <option>Breakdown</option>
+        <option>PDI</option>
+        <option>Service</option>
+        <option>Installation</option>
+        <option>Visit</option>
+      </select>
+
+      <input id="${id}_siteLocation" placeholder="Site Location">
+      <input id="${id}_callId" placeholder="Call ID">
+      <input id="${id}_labour" placeholder="Labour Charge">
+      <input id="${id}_distance" placeholder="Site Distance (KM)">
+
+      <input id="${id}_total" placeholder="TA+DA+Allowances" readonly>
+
+      <button onclick="saveEngineer('${branch}','${engineer}','${id}')">
         Save
       </button>
     `;
@@ -48,6 +90,7 @@ function renderEngineers(branch, engineers) {
     container.appendChild(card);
   });
 }
+
 
 function highlightMissing() {
   document.querySelectorAll(".engineer-card").forEach(card => {
@@ -59,22 +102,33 @@ function highlightMissing() {
 }
 
 
-function saveEngineer(branch, engineer, safeId) {
+function saveEngineer(branch, engineer, id) {
   const payload = {
     officeLocation: branch,
     engineerName: engineer,
-    customerName: document.getElementById(`${safeId}_customer`).value,
-    contactNumber: document.getElementById(`${safeId}_contact`).value,
-    complaint: document.getElementById(`${safeId}_complaint`).value,
-    machineNo: document.getElementById(`${safeId}_machine`).value
+
+    workshopOnsite: document.getElementById(`${id}_workshop`).value,
+    callType: document.getElementById(`${id}_callType`).value,
+    primarySecondary: document.getElementById(`${id}_primary`).value,
+    complaint: document.getElementById(`${id}_complaint`).value,
+    customerName: document.getElementById(`${id}_customer`).value,
+    contactNumber: document.getElementById(`${id}_contact`).value,
+    machineNo: document.getElementById(`${id}_machine`).value,
+    hmr: document.getElementById(`${id}_hmr`).value,
+    breakdownStatus: document.getElementById(`${id}_breakdown`).value,
+    siteLocation: document.getElementById(`${id}_siteLocation`).value,
+    callId: document.getElementById(`${id}_callId`).value,
+    labourCharge: document.getElementById(`${id}_labour`).value,
+    siteDistance: document.getElementById(`${id}_distance`).value,
+    totalAllowances: document.getElementById(`${id}_total`).value
   };
 
   fetch(API_URL, {
     method: "POST",
     body: JSON.stringify(payload)
   })
-  .then(res => res.json())
-  .then(() => alert(`${engineer} saved ✔️`));
+    .then(res => res.json())
+    .then(() => alert(`${engineer} saved ✔️`));
 }
 
 
