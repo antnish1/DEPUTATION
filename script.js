@@ -37,6 +37,13 @@ function renderEngineers(branch, engineers) {
         <input id="${safeId}_complaint" placeholder="Complaint">
         <input id="${safeId}_machine" placeholder="Machine No">
 
+        
+          if (!document.getElementById(`${safeId}_customer`).value) {
+            document.querySelector(`#${safeId}_customer`)
+              .closest(".engineer-card")
+              .classList.add("missing");
+          }
+
         <button onclick="saveEngineer('${branch}','${engineer}','${safeId}')">
           Save
         </button>
