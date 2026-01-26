@@ -63,3 +63,11 @@ function saveEngineer(branch, engineer, safeId) {
   .then(res => res.json())
   .then(() => alert(`${engineer} saved ✔️`));
 }
+
+
+function saveAll() {
+  document.querySelectorAll(".engineer-card button")
+    .forEach(btn => btn.click());
+
+  alert("All engineers saved ✔️");
+}
