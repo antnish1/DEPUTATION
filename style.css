@@ -45,3 +45,9 @@ body {
 .engineer-card h4 {
   margin: 0 0 10px 0;
 }
+
+
+.engineer-card.missing {
+  border: 2px solid red;
+  background: #ffe6e6;
+}
