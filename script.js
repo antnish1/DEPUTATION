@@ -1,52 +1,50 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwNibttN_UDKbhMsva3n6qZkbVlx45svpO5BZ7xe9e39Q-qRSwN7rv4_0SCyNWASvdm2A/exec";
+const API_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL";
 
-document.getElementById("location").addEventListener("change", function () {
-  fetch(`${API_URL}?action=getEngineers&location=${this.value}`)
+function loadBranch(branch) {
+  document.getElementById("branchTitle").innerText = branch;
+  document.getElementById("engineerContainer").innerHTML = "Loading...";
+
+  fetch(`${API_URL}?action=getEngineers&location=${branch}`)
     .then(res => res.json())
-    .then(data => {
-      const engineerSelect = document.getElementById("engineer");
-      engineerSelect.innerHTML = '<option value="">Select Engineer</option>';
-      data.forEach(e => {
-        engineerSelect.innerHTML += `<option>${e}</option>`;
-      });
-    });
-});
+    .then(engineers => renderEngineers(branch, engineers));
+}
 
-function submitForm() {
-    const payload = {
-      officeLocation: location.value,
-      engineerName: engineer.value,
-      workshopOnsite: workshopOnsite.value,
-      callType: callType.value,
-      primarySecondary: primarySecondary.value,
-      complaint: complaint.value,
-      customerName: customerName.value,
-      contactNumber: contactNumber.value,
-      machineNo: machineNo.value,
-      hmr: hmr.value,
-      breakdownStatus: breakdownStatus.value,
-      complaintDate: complaintDate.value,
-      complaintTime: complaintTime.value,
-      siteLocation: siteLocation.value,
-      deputationDate: deputationDate.value,
-      deputationTime: deputationTime.value,
-      engineerOnsiteTime: engineerOnsiteTime.value,
-      workCompletionDate: workCompletionDate.value,
-      workCompletionTime: workCompletionTime.value,
-      callId: callId.value,
-      labourCharge: labourCharge.value,
-      siteDistance: siteDistance.value,
-      daApplied: daApplied.value,
-      taApproved: taApproved.value,
-      daApproved: daApproved.value,
-      totalAllowances: totalAllowances.value
-    };
+function renderEngineers(branch, engineers) {
+  const container = document.getElementById("engineerContainer");
+  container.innerHTML = "";
 
+  engineers.forEach(engineer => {
+    container.innerHTML += `
+      <div class="engineer-card">
+        <h4>${engineer}</h4>
+
+        <input placeholder="Customer Name" id="customer_${engineer}" />
+        <input placeholder="Contact Number" id="contact_${engineer}" />
+        <input placeholder="Complaint" id="complaint_${engineer}" />
+        <input placeholder="Machine No" id="machine_${engineer}" />
+
+        <button onclick="saveEngineer('${branch}', '${engineer}')">
+          Save
+        </button>
+      </div>
+    `;
+  });
+}
+
+function saveEngineer(branch, engineer) {
+  const payload = {
+    officeLocation: branch,
+    engineerName: engineer,
+    customerName: document.getElementById(`customer_${engineer}`).value,
+    contactNumber: document.getElementById(`contact_${engineer}`).value,
+    complaint: document.getElementById(`complaint_${engineer}`).value,
+    machineNo: document.getElementById(`machine_${engineer}`).value
+  };
 
   fetch(API_URL, {
     method: "POST",
     body: JSON.stringify(payload)
   })
   .then(res => res.json())
-  .then(() => alert("Submitted Successfully ✔️"));
+  .then(() => alert(`${engineer} saved ✔️`));
 }
