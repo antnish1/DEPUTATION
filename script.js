@@ -6,8 +6,9 @@ function loadBranch(branch) {
   document.getElementById("engineerContainer").innerHTML = "Loading...";
   document.getElementById("saveAllBtn").style.display = "inline-block";
 
-  const callbackName = "handleEngineers";
-  window[callbackName] = function (engineers) {
+  currentCallbackName = "handleEngineers_" + Date.now();
+
+  window[currentCallbackName] = function (engineers) {
     renderEngineers(branch, engineers);
   };
 
@@ -16,10 +17,11 @@ function loadBranch(branch) {
     API_URL +
     "?action=getEngineers" +
     "&location=" + encodeURIComponent(branch) +
-    "&callback=" + callbackName;
+    "&callback=" + currentCallbackName;
 
   document.body.appendChild(script);
 }
+
 
 
 
