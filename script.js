@@ -3,6 +3,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbwNibttN_UDKbhMsva3n6qZ
 function loadBranch(branch) {
   document.getElementById("branchTitle").innerText = branch;
   document.getElementById("engineerContainer").innerHTML = "Loading...";
+  document.getElementById("saveAllBtn").style.display = "inline-block";
 
   const callbackName = "handleEngineers";
   window[callbackName] = function (engineers) {
