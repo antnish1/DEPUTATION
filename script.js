@@ -49,6 +49,14 @@ function renderEngineers(branch, engineers) {
   });
 }
 
+function highlightMissing() {
+  document.querySelectorAll(".engineer-card").forEach(card => {
+    const input = card.querySelector("input");
+    if (input && !input.value) {
+      card.classList.add("missing");
+    }
+  });
+}
 
 
 function saveEngineer(branch, engineer, safeId) {
@@ -76,3 +84,9 @@ function saveAll() {
 
   alert("All engineers saved ✔️");
 }
+
+
+window[callbackName] = function (engineers) {
+  renderEngineers(branch, engineers);
+  highlightMissing();
+};
