@@ -9,7 +9,10 @@ function loadBranch(branch) {
   currentCallbackName = "handleEngineers_" + Date.now();
 
   window[currentCallbackName] = function (engineers) {
+
     renderEngineers(branch, engineers);
+
+    loadTodayData(branch); // 🔥 NEW
   };
 
   const script = document.createElement("script");
@@ -21,6 +24,60 @@ function loadBranch(branch) {
 
   document.body.appendChild(script);
 }
+
+
+function loadTodayData(branch) {
+
+  const callbackName = "handleToday_" + Date.now();
+
+  window[callbackName] = function (data) {
+
+    data.forEach(entry => {
+
+      const cards = document.querySelectorAll(".engineer-card");
+
+      cards.forEach((card, index) => {
+
+        const engineer = card.getAttribute("data-engineer");
+
+        if (engineer === entry.engineerName) {
+
+          const id = "eng_" + index;
+
+          document.getElementById(`${id}_workshop`).value = entry.workshopOnsite || "";
+          document.getElementById(`${id}_callType`).value = entry.callType || "";
+          document.getElementById(`${id}_primary`).value = entry.primarySecondary || "";
+          document.getElementById(`${id}_complaint`).value = entry.complaint || "";
+          document.getElementById(`${id}_customer`).value = entry.customerName || "";
+          document.getElementById(`${id}_contact`).value = entry.contactNumber || "";
+          document.getElementById(`${id}_machine`).value = entry.machineNo || "";
+          document.getElementById(`${id}_hmr`).value = entry.hmr || "";
+          document.getElementById(`${id}_breakdown`).value = entry.breakdownStatus || "";
+          document.getElementById(`${id}_siteLocation`).value = entry.siteLocation || "";
+          document.getElementById(`${id}_callId`).value = entry.callId || "";
+          document.getElementById(`${id}_labour`).value = entry.labourCharge || "";
+          document.getElementById(`${id}_distance`).value = entry.siteDistance || "";
+          document.getElementById(`${id}_total`).value = entry.totalAllowances || "";
+
+          card.style.border = "2px solid green";
+        }
+
+      });
+
+    });
+
+  };
+
+  const script = document.createElement("script");
+  script.src =
+    API_URL +
+    "?action=getTodayData" +
+    "&location=" + encodeURIComponent(branch) +
+    "&callback=" + callbackName;
+
+  document.body.appendChild(script);
+}
+
 
 
 
