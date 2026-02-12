@@ -156,7 +156,7 @@ function closePopup() {
 }
 
 
-function saveAll() {
+async function saveAll() {
   const cards = document.querySelectorAll(".engineer-card");
 
   if (!cards.length) {
@@ -164,16 +164,26 @@ function saveAll() {
     return;
   }
 
+  const branch = document.getElementById("branchTitle").innerText;
+
+  let savePromises = [];
+  let skippedCount = 0;
+
   cards.forEach((card, index) => {
     const engineer = card.getAttribute("data-engineer");
     const id = "eng_" + index;
 
-    const machineNo = document.getElementById(`${id}_machine`).value;
+    const machineNo = document.getElementById(`${id}_machine`).value.trim();
 
-    if (!machineNo) return; // skip if machine not entered
+    // 🚨 Required validation
+    if (!machineNo) {
+      skippedCount++;
+      card.classList.add("missing");
+      return;
+    }
 
     const payload = {
-      officeLocation: document.getElementById("branchTitle").innerText,
+      officeLocation: branch,
       engineerName: engineer,
       workshopOnsite: document.getElementById(`${id}_workshop`).value,
       callType: document.getElementById(`${id}_callType`).value,
@@ -191,19 +201,43 @@ function saveAll() {
       totalAllowances: document.getElementById(`${id}_total`).value
     };
 
-    fetch(API_URL, {
+    const request = fetch(API_URL, {
       method: "POST",
       body: JSON.stringify(payload)
-    })
-      .then(res => res.json())
-      .then(response => {
-        if (response.status === "duplicate") {
-          showDuplicatePopup(response.engineer, response.machine);
-        }
-      });
+    }).then(res => res.json());
+
+    savePromises.push(request);
   });
 
-  alert("All valid engineers processed ✔️");
+  if (!savePromises.length) {
+    alert("No valid entries to save ❗");
+    return;
+  }
+
+  try {
+    const responses = await Promise.all(savePromises);
+
+    let successCount = 0;
+    let duplicateCount = 0;
+
+    responses.forEach(response => {
+      if (response.status === "success") {
+        successCount++;
+      } else if (response.status === "duplicate") {
+        duplicateCount++;
+      }
+    });
+
+    alert(
+      `Saved: ${successCount}\n` +
+      `Duplicates: ${duplicateCount}\n` +
+      `Skipped (Incomplete): ${skippedCount}`
+    );
+
+  } catch (error) {
+    console.error("Save error:", error);
+    alert("Error occurred while saving ❗");
+  }
 }
 
 
