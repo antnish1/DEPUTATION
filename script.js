@@ -34,6 +34,7 @@ function renderEngineers(branch, engineers) {
 
     const card = document.createElement("div");
     card.className = "engineer-card";
+    card.setAttribute("data-engineer", engineer);
 
     card.innerHTML = `
       <h4>${engineer}</h4>
@@ -82,12 +83,7 @@ function renderEngineers(branch, engineers) {
       <input id="${id}_callId" placeholder="Call ID">
       <input id="${id}_labour" placeholder="Labour Charge">
       <input id="${id}_distance" placeholder="Site Distance (KM)">
-
       <input id="${id}_total" placeholder="TA+DA+Allowances" readonly>
-
-      <button onclick="saveEngineer('${branch}','${engineer}','${id}')">
-        Save
-      </button>
     `;
 
     container.appendChild(card);
