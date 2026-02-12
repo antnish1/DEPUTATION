@@ -232,12 +232,14 @@ async function saveAll() {
 
     results.forEach(({ response, card }) => {
       if (response.status === "success") {
-        successCount++;
-        card.style.opacity = "0.5"; // visually mark as saved
-      } else if (response.status === "duplicate") {
-        duplicateCount++;
-        card.classList.add("missing");
+          successCount++;
+          card.style.opacity = "0.5";
+      } 
+      else if (response.status === "updated") {
+          successCount++;
+          card.style.border = "2px solid orange";
       }
+
     });
 
     showSummaryPopup(successCount, duplicateCount, skippedCount);
