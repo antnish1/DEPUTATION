@@ -157,10 +157,53 @@ function closePopup() {
 
 
 function saveAll() {
-  document.querySelectorAll(".engineer-card button")
-    .forEach(btn => btn.click());
+  const cards = document.querySelectorAll(".engineer-card");
 
-  alert("All engineers saved ✔️");
+  if (!cards.length) {
+    alert("No engineers loaded ❗");
+    return;
+  }
+
+  cards.forEach((card, index) => {
+    const engineer = card.getAttribute("data-engineer");
+    const id = "eng_" + index;
+
+    const machineNo = document.getElementById(`${id}_machine`).value;
+
+    if (!machineNo) return; // skip if machine not entered
+
+    const payload = {
+      officeLocation: document.getElementById("branchTitle").innerText,
+      engineerName: engineer,
+      workshopOnsite: document.getElementById(`${id}_workshop`).value,
+      callType: document.getElementById(`${id}_callType`).value,
+      primarySecondary: document.getElementById(`${id}_primary`).value,
+      complaint: document.getElementById(`${id}_complaint`).value,
+      customerName: document.getElementById(`${id}_customer`).value,
+      contactNumber: document.getElementById(`${id}_contact`).value,
+      machineNo: machineNo,
+      hmr: document.getElementById(`${id}_hmr`).value,
+      breakdownStatus: document.getElementById(`${id}_breakdown`).value,
+      siteLocation: document.getElementById(`${id}_siteLocation`).value,
+      callId: document.getElementById(`${id}_callId`).value,
+      labourCharge: document.getElementById(`${id}_labour`).value,
+      siteDistance: document.getElementById(`${id}_distance`).value,
+      totalAllowances: document.getElementById(`${id}_total`).value
+    };
+
+    fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    })
+      .then(res => res.json())
+      .then(response => {
+        if (response.status === "duplicate") {
+          showDuplicatePopup(response.engineer, response.machine);
+        }
+      });
+  });
+
+  alert("All valid engineers processed ✔️");
 }
 
 
