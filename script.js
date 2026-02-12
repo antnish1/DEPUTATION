@@ -157,6 +157,7 @@ function closePopup() {
 
 
 async function saveAll() {
+  const saveBtn = document.getElementById("saveAllBtn");
   const cards = document.querySelectorAll(".engineer-card");
 
   if (!cards.length) {
@@ -166,10 +167,16 @@ async function saveAll() {
 
   const branch = document.getElementById("branchTitle").innerText;
 
+  // 🔒 Prevent double click
+  saveBtn.disabled = true;
+  saveBtn.innerText = "Saving... ⏳";
+
   let savePromises = [];
   let skippedCount = 0;
 
   cards.forEach((card, index) => {
+    card.classList.remove("missing");
+
     const engineer = card.getAttribute("data-engineer");
     const id = "eng_" + index;
 
@@ -204,40 +211,43 @@ async function saveAll() {
     const request = fetch(API_URL, {
       method: "POST",
       body: JSON.stringify(payload)
-    }).then(res => res.json());
+    }).then(res => res.json())
+      .then(response => ({ response, card }));
 
     savePromises.push(request);
   });
 
   if (!savePromises.length) {
     alert("No valid entries to save ❗");
+    saveBtn.disabled = false;
+    saveBtn.innerText = "💾 Save All Engineers";
     return;
   }
 
   try {
-    const responses = await Promise.all(savePromises);
+    const results = await Promise.all(savePromises);
 
     let successCount = 0;
     let duplicateCount = 0;
 
-    responses.forEach(response => {
+    results.forEach(({ response, card }) => {
       if (response.status === "success") {
         successCount++;
+        card.style.opacity = "0.5"; // visually mark as saved
       } else if (response.status === "duplicate") {
         duplicateCount++;
+        card.classList.add("missing");
       }
     });
 
-    alert(
-      `Saved: ${successCount}\n` +
-      `Duplicates: ${duplicateCount}\n` +
-      `Skipped (Incomplete): ${skippedCount}`
-    );
+    showSummaryPopup(successCount, duplicateCount, skippedCount);
 
   } catch (error) {
     console.error("Save error:", error);
-    alert("Error occurred while saving ❗");
+    alert("Unexpected error occurred ❗");
   }
+
+  // 🔓 Re-enable button
+  saveBtn.disabled = false;
+  saveBtn.innerText = "💾 Save All Engineers";
 }
-
-
