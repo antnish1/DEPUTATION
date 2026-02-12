@@ -251,3 +251,14 @@ async function saveAll() {
   saveBtn.disabled = false;
   saveBtn.innerText = "💾 Save All Engineers";
 }
+
+
+
+function showSummaryPopup(saved, duplicates, skipped) {
+  document.getElementById("popupText").innerText =
+    `Saved: ${saved}\n` +
+    `Duplicates: ${duplicates}\n` +
+    `Incomplete: ${skipped}`;
+
+  document.getElementById("popup").classList.remove("hidden");
+}
