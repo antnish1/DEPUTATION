@@ -1,4 +1,6 @@
 name: AI Auto Edit
+permissions:
+  contents: write
 
 on:
   workflow_dispatch:   # Manual trigger button
