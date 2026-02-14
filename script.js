@@ -94,75 +94,56 @@ function renderEngineers(branch, engineers) {
     card.setAttribute("data-engineer", engineer);
 
     card.innerHTML = `
-      <form class="engineer-row-fields" autocomplete="off" aria-label="Engineer details for ${engineer}">
-        <span class="engineer-name">${engineer}</span>
-        <select id="${id}_workshop" aria-label="Work type">
-          <option value="">Workshop / Onsite</option>
-          <option value="Workshop">Workshop</option>
-          <option value="Onsite">Onsite</option>
-          <option value="Free">Free</option>
-          <option value="Leave">Leave</option>
-          <option value="Absent">Absent</option>
-        </select>
-        <select id="${id}_callType" aria-label="Call Type">
-          <option value="">Call Type</option>
-          <option>U/W</option>
-          <option>B/W</option>
-          <option>P/T</option>
-          <option>P/W</option>
-          <option>JCB CARE</option>
-          <option>ASC</option>
-          <option>Goodwill</option>
-        </select>
-        <select id="${id}_primary" aria-label="Primary or Secondary">
-          <option value="">Primary/Secondary</option>
-          <option>Primary</option>
-          <option>Secondary</option>
-        </select>
-        <input id="${id}_complaint" placeholder="Complaint" aria-label="Complaint" maxlength="40">
-        <input id="${id}_customer" placeholder="Customer" aria-label="Customer Name" maxlength="30">
-        <input id="${id}_contact" placeholder="Contact" aria-label="Contact Number" maxlength="15" pattern="[0-9]*">
-        <input id="${id}_machine" placeholder="Machine No" aria-label="Machine Number" maxlength="20" required>
-        <input id="${id}_hmr" placeholder="HMR" aria-label="HMR" maxlength="10">
-        <select id="${id}_breakdown" aria-label="Breakdown Status">
-          <option value="">Breakdown Status</option>
-          <option>Running With Problem</option>
-          <option>Breakdown</option>
-          <option>PDI</option>
-          <option>Service</option>
-          <option>Installation</option>
-          <option>Visit</option>
-        </select>
-        <input id="${id}_siteLocation" placeholder="Site Location" aria-label="Site Location" maxlength="30">
-        <input id="${id}_labour" placeholder="Labour" aria-label="Labour Charge" maxlength="10">
-        <input id="${id}_distance" placeholder="Distance (KM)" aria-label="Site Distance" maxlength="6">
-      </form>
+      <h4>${engineer}</h4>
+
+      <select id="${id}_workshop">
+        <option value="">Workshop / Onsite</option>
+        <option>Workshop</option>
+        <option>Onsite</option>
+        <option>Free</option>
+      </select>
+
+      <select id="${id}_callType">
+        <option value="">Call Type</option>
+        <option>U/W</option>
+        <option>B/W</option>
+        <option>P/T</option>
+        <option>P/W</option>
+        <option>JCB CARE</option>
+        <option>ASC</option>
+        <option>Goodwill</option>
+      </select>
+
+      <select id="${id}_primary">
+        <option value="">Primary / Secondary</option>
+        <option>Primary</option>
+        <option>Secondary</option>
+      </select>
+
+      <input id="${id}_complaint" placeholder="Complaint">
+      <input id="${id}_customer" placeholder="Customer Name">
+      <input id="${id}_contact" placeholder="Contact Number">
+      <input id="${id}_machine" placeholder="Machine No">
+      <input id="${id}_hmr" placeholder="HMR">
+
+      <select id="${id}_breakdown">
+        <option value="">Breakdown Status</option>
+        <option>Running With Problem</option>
+        <option>Breakdown</option>
+        <option>PDI</option>
+        <option>Service</option>
+        <option>Installation</option>
+        <option>Visit</option>
+      </select>
+
+      <input id="${id}_siteLocation" placeholder="Site Location">
+      <input id="${id}_callId" placeholder="Call ID">
+      <input id="${id}_labour" placeholder="Labour Charge">
+      <input id="${id}_distance" placeholder="Site Distance (KM)">
+      <input id="${id}_total" placeholder="TA+DA+Allowances" readonly>
     `;
 
     container.appendChild(card);
-
-    // Add event listeners for workshop buttons
-    const workshopSelect = card.querySelector(`#${id}_workshop`);
-    const allInputs = card.querySelectorAll('input, select');
-    workshopSelect.addEventListener('change', function() {
-      if (["Free", "Leave", "Absent"].includes(workshopSelect.value)) {
-        allInputs.forEach(input => {
-          if (input !== workshopSelect) {
-            input.readOnly = true;
-            input.classList.add('faded');
-            if (input.tagName === 'SELECT') input.disabled = true;
-          }
-        });
-      } else {
-        allInputs.forEach(input => {
-          if (input !== workshopSelect) {
-            input.readOnly = false;
-            input.classList.remove('faded');
-            if (input.tagName === 'SELECT') input.disabled = false;
-          }
-        });
-      }
-    });
   });
 }
 
