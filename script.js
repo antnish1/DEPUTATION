@@ -94,7 +94,7 @@ function renderEngineers(branch, engineers) {
     card.setAttribute("data-engineer", engineer);
 
     card.innerHTML = `
-      <div style="display: flex; align-items: center; gap: 10px;">
+      <div class="engineer-row-fields">
         <h4 style="margin: 0;">${engineer}</h4>
         <div id="${id}_workshopBtns" class="workshop-btn-group">
           <button type="button" class="workshop-btn" data-value="Workshop">Workshop</button>
@@ -104,46 +104,39 @@ function renderEngineers(branch, engineers) {
           <button type="button" class="workshop-btn" data-value="Absent">Absent</button>
         </div>
         <input type="hidden" id="${id}_workshop" value="" />
+        <select id="${id}_callType">
+          <option value="">Call Type</option>
+          <option>U/W</option>
+          <option>B/W</option>
+          <option>P/T</option>
+          <option>P/W</option>
+          <option>JCB CARE</option>
+          <option>ASC</option>
+          <option>Goodwill</option>
+        </select>
+        <select id="${id}_primary">
+          <option value="">Primary / Secondary</option>
+          <option>Primary</option>
+          <option>Secondary</option>
+        </select>
+        <input id="${id}_complaint" placeholder="Complaint">
+        <input id="${id}_customer" placeholder="Customer Name">
+        <input id="${id}_contact" placeholder="Contact Number">
+        <input id="${id}_machine" placeholder="Machine No">
+        <input id="${id}_hmr" placeholder="HMR">
+        <select id="${id}_breakdown">
+          <option value="">Breakdown Status</option>
+          <option>Running With Problem</option>
+          <option>Breakdown</option>
+          <option>PDI</option>
+          <option>Service</option>
+          <option>Installation</option>
+          <option>Visit</option>
+        </select>
+        <input id="${id}_siteLocation" placeholder="Site Location">
+        <input id="${id}_labour" placeholder="Labour Charge">
+        <input id="${id}_distance" placeholder="Site Distance (KM)">
       </div>
-
-      <select id="${id}_callType">
-        <option value="">Call Type</option>
-        <option>U/W</option>
-        <option>B/W</option>
-        <option>P/T</option>
-        <option>P/W</option>
-        <option>JCB CARE</option>
-        <option>ASC</option>
-        <option>Goodwill</option>
-      </select>
-
-      <select id="${id}_primary">
-        <option value="">Primary / Secondary</option>
-        <option>Primary</option>
-        <option>Secondary</option>
-      </select>
-
-      <input id="${id}_complaint" placeholder="Complaint">
-      <input id="${id}_customer" placeholder="Customer Name">
-      <input id="${id}_contact" placeholder="Contact Number">
-      <input id="${id}_machine" placeholder="Machine No">
-      <input id="${id}_hmr" placeholder="HMR">
-
-      <select id="${id}_breakdown">
-        <option value="">Breakdown Status</option>
-        <option>Running With Problem</option>
-        <option>Breakdown</option>
-        <option>PDI</option>
-        <option>Service</option>
-        <option>Installation</option>
-        <option>Visit</option>
-      </select>
-
-      <input id="${id}_siteLocation" placeholder="Site Location">
-      <input id="${id}_callId" placeholder="Call ID">
-      <input id="${id}_labour" placeholder="Labour Charge">
-      <input id="${id}_distance" placeholder="Site Distance (KM)">
-      <input id="${id}_total" placeholder="TA+DA+Allowances" readonly>
     `;
 
     container.appendChild(card);
