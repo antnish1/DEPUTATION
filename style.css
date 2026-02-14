@@ -1,3 +1,29 @@
+
+.workshop-btn-group {
+  display: flex;
+  gap: 5px;
+}
+
+.workshop-btn {
+  padding: 4px 10px;
+  border: 1px solid #888;
+  background: #f4f4f4;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.workshop-btn.active {
+  background: #2c3e50;
+  color: #fff;
+  border-color: #2c3e50;
+}
+
+.faded {
+  opacity: 0.5;
+  pointer-events: none;
+}
 body {
   margin: 0;
   font-family: Arial, sans-serif;
