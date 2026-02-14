@@ -1,0 +1,46 @@
+name: AI Auto Edit
+
+on:
+  workflow_dispatch:   # Manual trigger button
+
+jobs:
+  ai-edit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Read File
+        id: readfile
+        run: |
+          CONTENT=$(cat index.html | jq -Rs .)
+          echo "CONTENT=$CONTENT" >> $GITHUB_ENV
+
+      - name: Send to OpenAI
+        id: openai
+        run: |
+          RESPONSE=$(curl https://api.openai.com/v1/chat/completions \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
+            -d "{
+              \"model\": \"gpt-4o-mini\",
+              \"messages\": [
+                {\"role\": \"system\", \"content\": \"You are a senior web developer. Improve the code without breaking functionality.\"},
+                {\"role\": \"user\", \"content\": $CONTENT}
+              ]
+            }")
+
+          UPDATED=$(echo $RESPONSE | jq -r '.choices[0].message.content')
+          echo "$UPDATED" > index.html
+
+      - name: Commit & Push
+        run: |
+          git config user.name "AI Bot"
+          git config user.email "actions@github.com"
+          git add index.html
+          git commit -m "AI auto update"
+          git push
