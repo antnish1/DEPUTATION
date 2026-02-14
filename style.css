@@ -75,3 +75,35 @@ body {
   border-radius: 5px;
   text-align: center;
 }
+
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+#deputationTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+#deputationTable th,
+#deputationTable td {
+  border: 1px solid #ddd;
+  padding: 6px;
+  text-align: center;
+}
+
+#deputationTable th {
+  background: #2c3e50;
+  color: white;
+}
+
+#deputationTable input,
+#deputationTable select {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 12px;
+}
+
