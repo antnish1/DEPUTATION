@@ -104,26 +104,42 @@ body {
   padding: 15px;
 }
 
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
+  .branchbar {
+    width: 100%;
+    background: #2c3e50;
+    color: white;
+    padding: 10px 0 5px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    overflow-x: auto;
+  }
 
-.sidebar li {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #34495e;
-}
+  .branchbar ul {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0 10px;
+  }
 
-.sidebar li:hover {
-  background: #34495e;
-}
+  .branchbar li {
+    padding: 8px 18px;
+    cursor: pointer;
+    border-right: 1px solid #34495e;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
 
-.content {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
+  .branchbar li:last-child {
+    border-right: none;
+  }
+
+  .branchbar li:hover, .branchbar li.active {
+    background: #34495e;
+  }
 
 .engineer-card {
   border: 1px solid #ccc;
@@ -150,17 +166,3 @@ body {
   height: 100%;
   background: rgba(0,0,0,0.5);
   display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.popup.hidden {
-  display: none;
-}
-
-.popup-box {
-  background: white;
-  padding: 20px;
-  border-radius: 5px;
-  text-align: center;
-}
