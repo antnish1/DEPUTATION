@@ -1,27 +1,65 @@
 .engineer-row-fields {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  padding: 0 2px;
 }
 
 .engineer-row-fields > * {
   margin: 0;
-  min-width: 110px;
-  flex: 0 1 auto;
+  min-width: 80px;
+  flex: 0 1 90px;
 }
 
-.engineer-row-fields h4 {
+.engineer-name {
   min-width: 90px;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
 }
 
 .engineer-row-fields input,
 .engineer-row-fields select {
-  padding: 4px 6px;
-  font-size: 14px;
+  padding: 2px 5px;
+  font-size: 13px;
   border-radius: 3px;
-  border: 1px solid #ccc;
+  border: 1px solid #bbb;
+  background: #fafbfc;
+  transition: border 0.2s;
+}
+
+.engineer-row-fields input:focus,
+.engineer-row-fields select:focus {
+  border: 1.5px solid #2c3e50;
+  outline: none;
+}
+
+.workshop-btn-group {
+  display: flex;
+  gap: 3px;
+}
+
+.workshop-btn {
+  padding: 2px 8px;
+  border: 1px solid #888;
+  background: #f4f4f4;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 13px;
+  transition: background 0.2s, color 0.2s;
+  min-width: 55px;
+}
+
+.workshop-btn.active {
+  background: #2c3e50;
+  color: #fff;
+  border-color: #2c3e50;
+}
+
+.faded {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .workshop-btn-group {
