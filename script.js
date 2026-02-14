@@ -96,12 +96,14 @@ function renderEngineers(branch, engineers) {
     card.innerHTML = `
       <div style="display: flex; align-items: center; gap: 10px;">
         <h4 style="margin: 0;">${engineer}</h4>
-        <select id="${id}_workshop">
-          <option value="">Workshop / Onsite</option>
-          <option>Workshop</option>
-          <option>Onsite</option>
-          <option>Free</option>
-        </select>
+        <div id="${id}_workshopBtns" class="workshop-btn-group">
+          <button type="button" class="workshop-btn" data-value="Workshop">Workshop</button>
+          <button type="button" class="workshop-btn" data-value="Onsite">Onsite</button>
+          <button type="button" class="workshop-btn" data-value="Free">Free</button>
+          <button type="button" class="workshop-btn" data-value="Leave">Leave</button>
+          <button type="button" class="workshop-btn" data-value="Absent">Absent</button>
+        </div>
+        <input type="hidden" id="${id}_workshop" value="" />
       </div>
 
       <select id="${id}_callType">
@@ -145,6 +147,38 @@ function renderEngineers(branch, engineers) {
     `;
 
     container.appendChild(card);
+
+    // Add event listeners for workshop buttons
+    const btnGroup = card.querySelector(`#${id}_workshopBtns`);
+    const hiddenInput = card.querySelector(`#${id}_workshop`);
+    const allInputs = card.querySelectorAll('input, select');
+    btnGroup.querySelectorAll('.workshop-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Remove active from all
+        btnGroup.querySelectorAll('.workshop-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        hiddenInput.value = btn.getAttribute('data-value');
+
+        // Fade out or enable fields
+        if (["Free", "Leave", "Absent"].includes(hiddenInput.value)) {
+          allInputs.forEach(input => {
+            if (input !== hiddenInput) {
+              input.readOnly = true;
+              input.classList.add('faded');
+              if (input.tagName === 'SELECT') input.disabled = true;
+            }
+          });
+        } else {
+          allInputs.forEach(input => {
+            if (input !== hiddenInput) {
+              input.readOnly = false;
+              input.classList.remove('faded');
+              if (input.tagName === 'SELECT') input.disabled = false;
+            }
+          });
+        }
+      });
+    });
   });
 }
 
