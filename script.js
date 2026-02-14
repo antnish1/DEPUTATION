@@ -96,14 +96,14 @@ function renderEngineers(branch, engineers) {
     card.innerHTML = `
       <form class="engineer-row-fields" autocomplete="off" aria-label="Engineer details for ${engineer}">
         <span class="engineer-name">${engineer}</span>
-        <div id="${id}_workshopBtns" class="workshop-btn-group" role="group" aria-label="Work type">
-          <button type="button" class="workshop-btn" data-value="Workshop" aria-label="Workshop">Workshop</button>
-          <button type="button" class="workshop-btn" data-value="Onsite" aria-label="Onsite">Onsite</button>
-          <button type="button" class="workshop-btn" data-value="Free" aria-label="Free">Free</button>
-          <button type="button" class="workshop-btn" data-value="Leave" aria-label="Leave">Leave</button>
-          <button type="button" class="workshop-btn" data-value="Absent" aria-label="Absent">Absent</button>
-        </div>
-        <input type="hidden" id="${id}_workshop" value="" />
+        <select id="${id}_workshop" aria-label="Work type">
+          <option value="">Workshop / Onsite</option>
+          <option value="Workshop">Workshop</option>
+          <option value="Onsite">Onsite</option>
+          <option value="Free">Free</option>
+          <option value="Leave">Leave</option>
+          <option value="Absent">Absent</option>
+        </select>
         <select id="${id}_callType" aria-label="Call Type">
           <option value="">Call Type</option>
           <option>U/W</option>
@@ -142,28 +142,26 @@ function renderEngineers(branch, engineers) {
     container.appendChild(card);
 
     // Add event listeners for workshop buttons
-    const btnGroup = card.querySelector(`#${id}_workshopBtns`);
-    const hiddenInput = card.querySelector(`#${id}_workshop`);
-    const allInputs = card.querySelectorAll('input:not([type="hidden"]), select');
-    btnGroup.querySelectorAll('.workshop-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        btnGroup.querySelectorAll('.workshop-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        hiddenInput.value = btn.getAttribute('data-value');
-        if (["Free", "Leave", "Absent"].includes(hiddenInput.value)) {
-          allInputs.forEach(input => {
+    const workshopSelect = card.querySelector(`#${id}_workshop`);
+    const allInputs = card.querySelectorAll('input, select');
+    workshopSelect.addEventListener('change', function() {
+      if (["Free", "Leave", "Absent"].includes(workshopSelect.value)) {
+        allInputs.forEach(input => {
+          if (input !== workshopSelect) {
             input.readOnly = true;
             input.classList.add('faded');
             if (input.tagName === 'SELECT') input.disabled = true;
-          });
-        } else {
-          allInputs.forEach(input => {
+          }
+        });
+      } else {
+        allInputs.forEach(input => {
+          if (input !== workshopSelect) {
             input.readOnly = false;
             input.classList.remove('faded');
             if (input.tagName === 'SELECT') input.disabled = false;
-          });
-        }
-      });
+          }
+        });
+      }
     });
   });
 }
