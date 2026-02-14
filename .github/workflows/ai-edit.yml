@@ -1,29 +1,40 @@
 name: AI Auto Edit
+
 permissions:
   contents: write
 
 on:
-  workflow_dispatch:   # Manual trigger button
+  workflow_dispatch:
+    inputs:
+      filename:
+        description: "File to edit (example: index.html or script.js)"
+        required: true
+        default: "index.html"
+      instruction:
+        description: "What should AI change?"
+        required: true
+        default: "Improve the code without breaking functionality"
 
 jobs:
   ai-edit:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Install jq
-        run: sudo apt-get install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
-      - name: Read File
+      - name: Read File Content
         id: readfile
         run: |
-          CONTENT=$(cat index.html | jq -Rs .)
+          FILE="${{ github.event.inputs.filename }}"
+          CONTENT=$(cat "$FILE" | jq -Rs .)
+          echo "FILE=$FILE" >> $GITHUB_ENV
           echo "CONTENT=$CONTENT" >> $GITHUB_ENV
 
-      - name: Send to OpenAI
-        id: openai
+      - name: Send File to OpenAI
         run: |
           RESPONSE=$(curl https://api.openai.com/v1/chat/completions \
             -H "Content-Type: application/json" \
@@ -31,18 +42,18 @@ jobs:
             -d "{
               \"model\": \"gpt-4o-mini\",
               \"messages\": [
-                {\"role\": \"system\", \"content\": \"You are a senior web developer. Improve the code without breaking functionality.\"},
-                {\"role\": \"user\", \"content\": $CONTENT}
+                {\"role\": \"system\", \"content\": \"You are a senior web developer. Return ONLY the full updated file code. Do not add explanations.\"},
+                {\"role\": \"user\", \"content\": \"Instruction: ${{ github.event.inputs.instruction }}\n\nFile Content:\n$CONTENT\"}
               ]
             }")
 
           UPDATED=$(echo $RESPONSE | jq -r '.choices[0].message.content')
-          echo "$UPDATED" > index.html
+          echo "$UPDATED" > "$FILE"
 
-      - name: Commit & Push
+      - name: Commit and Push Changes
         run: |
           git config user.name "AI Bot"
           git config user.email "actions@github.com"
-          git add index.html
-          git commit -m "AI auto update"
+          git add "$FILE"
+          git commit -m "AI update: ${{ github.event.inputs.instruction }}" || echo "No changes to commit"
           git push
