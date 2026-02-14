@@ -94,14 +94,15 @@ function renderEngineers(branch, engineers) {
     card.setAttribute("data-engineer", engineer);
 
     card.innerHTML = `
-      <h4>${engineer}</h4>
-
-      <select id="${id}_workshop">
-        <option value="">Workshop / Onsite</option>
-        <option>Workshop</option>
-        <option>Onsite</option>
-        <option>Free</option>
-      </select>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <h4 style="margin: 0;">${engineer}</h4>
+        <select id="${id}_workshop">
+          <option value="">Workshop / Onsite</option>
+          <option>Workshop</option>
+          <option>Onsite</option>
+          <option>Free</option>
+        </select>
+      </div>
 
       <select id="${id}_callType">
         <option value="">Call Type</option>
