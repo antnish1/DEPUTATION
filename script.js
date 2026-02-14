@@ -94,17 +94,17 @@ function renderEngineers(branch, engineers) {
     card.setAttribute("data-engineer", engineer);
 
     card.innerHTML = `
-      <div class="engineer-row-fields">
-        <h4 style="margin: 0;">${engineer}</h4>
-        <div id="${id}_workshopBtns" class="workshop-btn-group">
-          <button type="button" class="workshop-btn" data-value="Workshop">Workshop</button>
-          <button type="button" class="workshop-btn" data-value="Onsite">Onsite</button>
-          <button type="button" class="workshop-btn" data-value="Free">Free</button>
-          <button type="button" class="workshop-btn" data-value="Leave">Leave</button>
-          <button type="button" class="workshop-btn" data-value="Absent">Absent</button>
+      <form class="engineer-row-fields" autocomplete="off" aria-label="Engineer details for ${engineer}">
+        <span class="engineer-name">${engineer}</span>
+        <div id="${id}_workshopBtns" class="workshop-btn-group" role="group" aria-label="Work type">
+          <button type="button" class="workshop-btn" data-value="Workshop" aria-label="Workshop">Workshop</button>
+          <button type="button" class="workshop-btn" data-value="Onsite" aria-label="Onsite">Onsite</button>
+          <button type="button" class="workshop-btn" data-value="Free" aria-label="Free">Free</button>
+          <button type="button" class="workshop-btn" data-value="Leave" aria-label="Leave">Leave</button>
+          <button type="button" class="workshop-btn" data-value="Absent" aria-label="Absent">Absent</button>
         </div>
         <input type="hidden" id="${id}_workshop" value="" />
-        <select id="${id}_callType">
+        <select id="${id}_callType" aria-label="Call Type">
           <option value="">Call Type</option>
           <option>U/W</option>
           <option>B/W</option>
@@ -114,17 +114,17 @@ function renderEngineers(branch, engineers) {
           <option>ASC</option>
           <option>Goodwill</option>
         </select>
-        <select id="${id}_primary">
-          <option value="">Primary / Secondary</option>
+        <select id="${id}_primary" aria-label="Primary or Secondary">
+          <option value="">Primary/Secondary</option>
           <option>Primary</option>
           <option>Secondary</option>
         </select>
-        <input id="${id}_complaint" placeholder="Complaint">
-        <input id="${id}_customer" placeholder="Customer Name">
-        <input id="${id}_contact" placeholder="Contact Number">
-        <input id="${id}_machine" placeholder="Machine No">
-        <input id="${id}_hmr" placeholder="HMR">
-        <select id="${id}_breakdown">
+        <input id="${id}_complaint" placeholder="Complaint" aria-label="Complaint" maxlength="40">
+        <input id="${id}_customer" placeholder="Customer" aria-label="Customer Name" maxlength="30">
+        <input id="${id}_contact" placeholder="Contact" aria-label="Contact Number" maxlength="15" pattern="[0-9]*">
+        <input id="${id}_machine" placeholder="Machine No" aria-label="Machine Number" maxlength="20" required>
+        <input id="${id}_hmr" placeholder="HMR" aria-label="HMR" maxlength="10">
+        <select id="${id}_breakdown" aria-label="Breakdown Status">
           <option value="">Breakdown Status</option>
           <option>Running With Problem</option>
           <option>Breakdown</option>
@@ -133,10 +133,10 @@ function renderEngineers(branch, engineers) {
           <option>Installation</option>
           <option>Visit</option>
         </select>
-        <input id="${id}_siteLocation" placeholder="Site Location">
-        <input id="${id}_labour" placeholder="Labour Charge">
-        <input id="${id}_distance" placeholder="Site Distance (KM)">
-      </div>
+        <input id="${id}_siteLocation" placeholder="Site Location" aria-label="Site Location" maxlength="30">
+        <input id="${id}_labour" placeholder="Labour" aria-label="Labour Charge" maxlength="10">
+        <input id="${id}_distance" placeholder="Distance (KM)" aria-label="Site Distance" maxlength="6">
+      </form>
     `;
 
     container.appendChild(card);
@@ -144,30 +144,23 @@ function renderEngineers(branch, engineers) {
     // Add event listeners for workshop buttons
     const btnGroup = card.querySelector(`#${id}_workshopBtns`);
     const hiddenInput = card.querySelector(`#${id}_workshop`);
-    const allInputs = card.querySelectorAll('input, select');
+    const allInputs = card.querySelectorAll('input:not([type="hidden"]), select');
     btnGroup.querySelectorAll('.workshop-btn').forEach(btn => {
       btn.addEventListener('click', function() {
-        // Remove active from all
         btnGroup.querySelectorAll('.workshop-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         hiddenInput.value = btn.getAttribute('data-value');
-
-        // Fade out or enable fields
         if (["Free", "Leave", "Absent"].includes(hiddenInput.value)) {
           allInputs.forEach(input => {
-            if (input !== hiddenInput) {
-              input.readOnly = true;
-              input.classList.add('faded');
-              if (input.tagName === 'SELECT') input.disabled = true;
-            }
+            input.readOnly = true;
+            input.classList.add('faded');
+            if (input.tagName === 'SELECT') input.disabled = true;
           });
         } else {
           allInputs.forEach(input => {
-            if (input !== hiddenInput) {
-              input.readOnly = false;
-              input.classList.remove('faded');
-              if (input.tagName === 'SELECT') input.disabled = false;
-            }
+            input.readOnly = false;
+            input.classList.remove('faded');
+            if (input.tagName === 'SELECT') input.disabled = false;
           });
         }
       });
