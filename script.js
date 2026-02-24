@@ -208,6 +208,8 @@ function renderEngineers(engineers) {
    // After all rows are initialized, calculate once
    recalculateTADA();
 
+}
+   
 function shouldLockRowByWorkType(workType) {
   return NON_DEPUTATION_WORK_TYPES.includes(workType);
 }
