@@ -161,7 +161,7 @@ html, body {
 
 .top-menu {
   width: 100%;
-  box-sizing: border-box;
+  
   height: 50px;
   background: #2c3e50;
   display: flex;
