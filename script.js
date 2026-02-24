@@ -81,10 +81,12 @@ function loadTodayData(branch) {
         document.getElementById(`complaint_${index}`).value = entry.complaint || "";
         document.getElementById(`customer_${index}`).value = entry.customerName || "";
         document.getElementById(`machine_${index}`).value = entry.machineNo || "";
+        document.getElementById(`contact_${index}`).value = entry.contactNumber || "";
         document.getElementById(`hmr_${index}`).value = entry.hmr || "";
         document.getElementById(`status_${index}`).value = entry.breakdownStatus || "";
         document.getElementById(`callid_${index}`).value = entry.callId || "";
         document.getElementById(`labour_${index}`).value = entry.labourCharge || "";
+        document.getElementById(`location_${index}`).value = entry.siteLocation || "";
         document.getElementById(`km_${index}`).value = entry.siteDistance || "";
 
         refreshTotal(index);
@@ -144,6 +146,7 @@ function renderEngineers(engineers) {
       <td><input id="complaint_${index}"></td>
       <td><input id="customer_${index}"></td>
       <td><input id="machine_${index}"></td>
+      <td><input id="contact_${index}"></td>
       <td><input id="hmr_${index}"></td>
 
       <td>
@@ -161,6 +164,7 @@ function renderEngineers(engineers) {
       <td><input id="callid_${index}"></td>
       <td><input id="labour_${index}" inputmode="decimal"></td>
       <td><input id="km_${index}" inputmode="decimal"></td>
+      <td><input id="location_${index}"></td>
       <td><input id="total_${index}" readonly></td>
     `;
 
@@ -261,23 +265,23 @@ async function saveAll() {
     }
 
     const payload = {
-      officeLocation: branch,
-      engineerName: engineer,
-      workshopOnsite: document.getElementById(`wo_${index}`).value,
-      callType: document.getElementById(`call_${index}`).value,
-      primarySecondary: document.getElementById(`ps_${index}`).value,
-      complaint: document.getElementById(`complaint_${index}`).value,
-      customerName: document.getElementById(`customer_${index}`).value,
-      contactNumber: "",
-      machineNo,
-      hmr: document.getElementById(`hmr_${index}`).value,
-      breakdownStatus: document.getElementById(`status_${index}`).value,
-      siteLocation: "",
-      callId: document.getElementById(`callid_${index}`).value,
-      labourCharge: document.getElementById(`labour_${index}`).value,
-      siteDistance: document.getElementById(`km_${index}`).value,
-      totalAllowances: document.getElementById(`total_${index}`).value
-    };
+        officeLocation: branch,
+        engineerName: engineer,
+        workshopOnsite: document.getElementById(`wo_${index}`).value,
+        callType: document.getElementById(`call_${index}`).value,
+        primarySecondary: document.getElementById(`ps_${index}`).value,
+        complaint: document.getElementById(`complaint_${index}`).value,
+        customerName: document.getElementById(`customer_${index}`).value,
+        contactNumber: document.getElementById(`contact_${index}`).value,
+        machineNo,
+        hmr: document.getElementById(`hmr_${index}`).value,
+        breakdownStatus: document.getElementById(`status_${index}`).value,
+        siteLocation: document.getElementById(`location_${index}`).value,
+        callId: document.getElementById(`callid_${index}`).value,
+        labourCharge: document.getElementById(`labour_${index}`).value,
+        siteDistance: document.getElementById(`km_${index}`).value,
+        totalAllowances: document.getElementById(`total_${index}`).value
+      };
 
     const request = fetch(API_URL, {
       method: "POST",
