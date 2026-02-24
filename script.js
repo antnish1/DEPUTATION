@@ -265,23 +265,23 @@ async function saveAll() {
     }
 
     const payload = {
-        officeLocation: branch,
-        engineerName: engineer,
-        workshopOnsite: document.getElementById(`wo_${index}`).value,
-        callType: document.getElementById(`call_${index}`).value,
-        primarySecondary: document.getElementById(`ps_${index}`).value,
-        complaint: document.getElementById(`complaint_${index}`).value,
-        customerName: document.getElementById(`customer_${index}`).value,
-        contactNumber: document.getElementById(`contact_${index}`).value,
-        machineNo,
-        hmr: document.getElementById(`hmr_${index}`).value,
-        breakdownStatus: document.getElementById(`status_${index}`).value,
-        siteLocation: document.getElementById(`location_${index}`).value,
-        callId: document.getElementById(`callid_${index}`).value,
-        labourCharge: document.getElementById(`labour_${index}`).value,
-        siteDistance: document.getElementById(`km_${index}`).value,
-        totalAllowances: document.getElementById(`total_${index}`).value
-      };
+     officeLocation: branch,
+     engineerName: engineer,
+     workshopOnsite: document.getElementById(`wo_${index}`).value,
+     callType: document.getElementById(`call_${index}`).value,
+     primarySecondary: document.getElementById(`ps_${index}`).value,
+     complaint: document.getElementById(`complaint_${index}`).value,
+     customerName: document.getElementById(`customer_${index}`).value,
+     contactNumber: document.getElementById(`contact_${index}`).value,
+     machineNo: document.getElementById(`machine_${index}`).value,
+     hmr: document.getElementById(`hmr_${index}`).value,
+     breakdownStatus: document.getElementById(`status_${index}`).value,
+     siteLocation: document.getElementById(`location_${index}`).value,
+     callId: document.getElementById(`callid_${index}`).value,
+     labourCharge: document.getElementById(`labour_${index}`).value,
+     siteDistance: document.getElementById(`km_${index}`).value,
+     totalAllowances: document.getElementById(`total_${index}`).value
+   };
 
     const request = fetch(API_URL, {
       method: "POST",
