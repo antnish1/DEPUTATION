@@ -3,37 +3,9 @@ body {
   font-family: Arial, sans-serif;
 }
 
-.container {
-  display: flex;
-  height: 100vh;
-}
 
-.sidebar {
-  width: 250px;
-  background: #2c3e50;
-  color: white;
-  padding: 15px;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar li {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #34495e;
-}
-
-.sidebar li:hover {
-  background: #34495e;
-}
-
-.content {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
+.main-content {
+  width: 100%;
 }
 
 .engineer-card {
@@ -174,4 +146,70 @@ body {
   100% {
     transform: rotate(360deg);
   }
+}
+
+
+/* =========================
+   TOP MENU BAR
+========================= */
+
+.top-menu {
+  width: 100%;
+  height: 50px;
+  background: #2c3e50;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.menu-left {
+  display: flex;
+  align-items: center;
+}
+
+.menu-item {
+  position: relative;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.menu-item:hover {
+  background: #34495e;
+  border-radius: 4px;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background: white;
+  color: black;
+  min-width: 180px;
+  display: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.dropdown-content div {
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.dropdown-content div:hover {
+  background: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Main Content Layout */
+.main-content {
+  padding: 20px;
 }
