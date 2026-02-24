@@ -142,6 +142,7 @@ function renderEngineers(engineers) {
         <div class="customer-wrapper">
           <input id="customer_${index}" readonly>
           <div class="customer-spinner hidden" id="customerLoader_${index}"></div>
+          <div class="customer-check hidden" id="customerCheck_${index}">✔</div>
         </div>
       </td>
 
