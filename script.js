@@ -254,7 +254,15 @@ function renderEngineers(engineers) {
     kmInput.addEventListener("input", recalculateTADA);
 
     // Machine No change
-    machineInput.addEventListener("input", recalculateTADA);
+    machineInput.addEventListener("input", () => {
+     recalculateTADA();
+
+       machineInput.addEventListener("blur", () => {
+        const machineNo = machineInput.value.trim();
+        fetchMachineDetails(machineNo, index);
+      });
+       
+   });
 
     // Initial row setup
     applyRowLockState(row, index);
