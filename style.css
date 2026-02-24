@@ -263,7 +263,7 @@ body {
 
 
 /* =========================
-   CUSTOMER SPINNER (Pure CSS)
+   CUSTOMER SPINNER
 ========================= */
 
 .customer-wrapper {
@@ -272,18 +272,19 @@ body {
 
 .customer-wrapper input {
   width: 100%;
-  padding-right: 30px;
+  padding-right: 28px;
+  box-sizing: border-box;
 }
 
 .customer-spinner {
   position: absolute;
-  right: 8px;
+  right: 6px;
   top: 50%;
-  width: 16px;
-  height: 16px;
-  margin-top: -8px;
-  border: 3px solid #ccc;
-  border-top: 3px solid #2c3e50;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border: 2px solid #ccc;
+  border-top: 2px solid #2c3e50;
   border-radius: 50%;
   animation: spinCustomer 0.7s linear infinite;
 }
@@ -297,98 +298,23 @@ body {
   to { transform: rotate(360deg); }
 }
 
-
-
-/* =========================
-   CUSTOMER STATUS ICONS
-========================= */
-
-.customer-wrapper {
-  position: relative;
-}
-
-.customer-wrapper input {
+/* Fix table overflow issue */
+#deputationTable {
   width: 100%;
-  padding-right: 40px;
+  table-layout: fixed;
 }
 
-.customer-spinner {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  width: 16px;
-  height: 16px;
-  margin-top: -8px;
-  border: 3px solid #ccc;
-  border-top: 3px solid #2c3e50;
-  border-radius: 50%;
-  animation: spinCustomer 0.7s linear infinite;
+#deputationTable th,
+#deputationTable td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.customer-check {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 16px;
-  color: #27ae60;
-  font-weight: bold;
-}
-
-@keyframes spinCustomer {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* =========================
-   MACHINE NOT FOUND POPUP
-========================= */
-
-.machine-popup-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-
-.machine-popup {
-  background: white;
-  width: 350px;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  animation: popupFade 0.2s ease-in-out;
-}
-
-.machine-popup h3 {
-  margin-top: 0;
-  color: #c0392b;
-}
-
-.machine-popup input {
+#deputationTable input,
+#deputationTable select {
   width: 100%;
-  padding: 8px;
-  margin-top: 10px;
-  margin-bottom: 15px;
+  box-sizing: border-box;
 }
 
-.machine-popup button {
-  padding: 8px 14px;
-  background: #2c3e50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
-.machine-popup button:hover {
-  background: #34495e;
-}
-
-@keyframes popupFade {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
