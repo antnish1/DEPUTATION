@@ -47,11 +47,6 @@ body {
 }
 
 
-.engineer-card.missing {
-  border: 2px solid red;
-  background: #ffe6e6;
-}
-
 
 .popup {
   position: fixed;
@@ -105,4 +100,25 @@ body {
   border: none;
   outline: none;
   font-size: 12px;
+}
+
+
+
+.row-readonly td:not(:first-child):not(:nth-child(2)) {
+  opacity: 0.45;
+  background: #f3f4f6;
+}
+
+.row-readonly td:not(:first-child):not(:nth-child(2)) input,
+.row-readonly td:not(:first-child):not(:nth-child(2)) select {
+  background: transparent;
+  cursor: not-allowed;
+}
+
+#deputationTable tr.missing td {
+  background: #ffe6e6;
+}
+
+#deputationTable tr.missing {
+  outline: 2px solid #d63031;
 }
