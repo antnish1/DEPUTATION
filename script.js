@@ -2,6 +2,25 @@ const API_URL = "https://script.google.com/macros/s/AKfycbwNibttN_UDKbhMsva3n6qZ
 
 const NON_DEPUTATION_WORK_TYPES = ["Free", "Leave", "Absent"];
 
+
+/* ===============================
+   GLOBAL LOADER CONTROL
+================================= */
+
+function showLoader(message = "Loading...") {
+  const loader = document.getElementById("globalLoader");
+  const text = document.getElementById("loaderText");
+
+  text.innerText = message;
+  loader.classList.remove("hidden");
+}
+
+function hideLoader() {
+  const loader = document.getElementById("globalLoader");
+  loader.classList.add("hidden");
+}
+
+
 function jsonpRequest(params, callback) {
   const callbackName = `jsonp_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
