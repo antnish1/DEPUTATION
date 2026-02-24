@@ -35,37 +35,22 @@
 ========================= -->
 <div class="main-content">
 
-  <h2 id="branchTitle">Select a Branch</h2>
+  <div id="branchContent" style="display:none;">
 
-  <button id="saveAllBtn"
-          onclick="saveAll()"
-          style="display:none; margin-bottom:15px;">
-    💾 Save All Engineers
-  </button>
+    <h2 id="branchTitle"></h2>
 
-  <div class="table-wrapper">
-    <table id="deputationTable">
-      <thead>
-        <tr>
-          <th>Engineer</th>
-          <th>W/O</th>
-          <th>Machine No.</th>
-          <th>Customer</th>
-          <th>Contact No.</th>
-          <th>Complaint</th>
-          <th>HMR</th>
-          <th>Call Type</th>
-          <th>P/S</th>
-          <th>Status</th>
-          <th>M/C Location</th>
-          <th>KM</th>
-          <th>Call ID</th>
-          <th>Labour</th>
-          <th>TA DA</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+    <button id="saveAllBtn"
+            onclick="saveAll()"
+            style="margin-bottom:15px;">
+      💾 Save All Engineers
+    </button>
+
+    <div class="table-wrapper">
+      <table id="deputationTable">
+        ...
+      </table>
+    </div>
+
   </div>
 
 </div>
