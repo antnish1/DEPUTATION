@@ -122,6 +122,7 @@ function renderEngineers(engineers) {
     row.innerHTML = `
       <td>${engineer}</td>
 
+      <!-- W/O -->
       <td>
         <select id="wo_${index}">
           <option value=""></option>
@@ -133,6 +134,34 @@ function renderEngineers(engineers) {
         </select>
       </td>
 
+      <!-- Machine No -->
+      <td><input id="machine_${index}"></td>
+
+      <!-- Customer -->
+      <td><input id="customer_${index}"></td>
+
+      <!-- Contact No (10 digit mobile) -->
+      <td>
+        <input id="contact_${index}"
+               type="tel"
+               inputmode="numeric"
+               pattern="[0-9]{10}"
+               maxlength="10"
+               placeholder="10 digit">
+      </td>
+
+      <!-- Complaint -->
+      <td><input id="complaint_${index}"></td>
+
+      <!-- HMR (Whole number) -->
+      <td>
+        <input id="hmr_${index}"
+               type="number"
+               min="0"
+               step="1">
+      </td>
+
+      <!-- Call Type -->
       <td>
         <select id="call_${index}">
           <option value=""></option>
@@ -146,6 +175,7 @@ function renderEngineers(engineers) {
         </select>
       </td>
 
+      <!-- P/S -->
       <td>
         <select id="ps_${index}">
           <option value=""></option>
@@ -154,12 +184,7 @@ function renderEngineers(engineers) {
         </select>
       </td>
 
-      <td><input id="complaint_${index}"></td>
-      <td><input id="customer_${index}"></td>
-      <td><input id="machine_${index}"></td>
-      <td><input id="contact_${index}"></td>
-      <td><input id="hmr_${index}"></td>
-
+      <!-- Status -->
       <td>
         <select id="status_${index}">
           <option value=""></option>
@@ -172,10 +197,29 @@ function renderEngineers(engineers) {
         </select>
       </td>
 
-      <td><input id="callid_${index}"></td>
-      <td><input id="labour_${index}" inputmode="decimal"></td>
-      <td><input id="km_${index}" inputmode="decimal"></td>
+      <!-- M/C Location -->
       <td><input id="location_${index}"></td>
+
+      <!-- KM (Whole number) -->
+      <td>
+        <input id="km_${index}"
+               type="number"
+               min="0"
+               step="1">
+      </td>
+
+      <!-- Call ID -->
+      <td><input id="callid_${index}"></td>
+
+      <!-- Labour (Whole number) -->
+      <td>
+        <input id="labour_${index}"
+               type="number"
+               min="0"
+               step="1">
+      </td>
+
+      <!-- TA DA -->
       <td><input id="total_${index}" readonly></td>
     `;
 
@@ -183,35 +227,41 @@ function renderEngineers(engineers) {
   });
 
   const rows = document.querySelectorAll("#tableBody tr");
-   rows.forEach((row, index) => {
-   
-     const woSelect = document.getElementById(`wo_${index}`);
-     const labourInput = document.getElementById(`labour_${index}`);
-     const kmInput = document.getElementById(`km_${index}`);
-     const machineInput = document.getElementById(`machine_${index}`);
-   
-     // W/O change
-     woSelect.addEventListener("change", () => {
-       applyRowLockState(row, index);
-       recalculateTADA();
-     });
-   
-     // Labour change
-     labourInput.addEventListener("input", recalculateTADA);
-   
-     // KM change
-     kmInput.addEventListener("input", recalculateTADA);
-   
-     // Machine No change
-     machineInput.addEventListener("input", recalculateTADA);
-   
-     // Initial row setup
-     applyRowLockState(row, index);
-   });
-   
-   // After all rows are initialized, calculate once
-   recalculateTADA();
 
+  rows.forEach((row, index) => {
+
+    const woSelect = document.getElementById(`wo_${index}`);
+    const labourInput = document.getElementById(`labour_${index}`);
+    const kmInput = document.getElementById(`km_${index}`);
+    const machineInput = document.getElementById(`machine_${index}`);
+    const contactInput = document.getElementById(`contact_${index}`);
+
+    // Restrict contact to digits only (extra safety)
+    contactInput.addEventListener("input", function () {
+      this.value = this.value.replace(/\D/g, "").slice(0, 10);
+    });
+
+    // W/O change
+    woSelect.addEventListener("change", () => {
+      applyRowLockState(row, index);
+      recalculateTADA();
+    });
+
+    // Labour change
+    labourInput.addEventListener("input", recalculateTADA);
+
+    // KM change
+    kmInput.addEventListener("input", recalculateTADA);
+
+    // Machine No change
+    machineInput.addEventListener("input", recalculateTADA);
+
+    // Initial row setup
+    applyRowLockState(row, index);
+  });
+
+  // After all rows are initialized, calculate once
+  recalculateTADA();
 }
    
 function shouldLockRowByWorkType(workType) {
