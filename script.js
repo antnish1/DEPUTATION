@@ -22,12 +22,15 @@ function hideLoader() {
 
 
 function jsonpRequest(params, callback) {
+  showLoader("Fetching data...");
+
   const callbackName = `jsonp_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
   window[callbackName] = (payload) => {
     callback(payload);
     delete window[callbackName];
     script.remove();
+    hideLoader();
   };
 
   const query = new URLSearchParams({ ...params, callback: callbackName }).toString();
@@ -37,7 +40,8 @@ function jsonpRequest(params, callback) {
   script.onerror = () => {
     delete window[callbackName];
     script.remove();
-    alert("Unable to load data from server.");
+    hideLoader();
+    alert("Unable to load data from server ❗");
   };
 
   document.body.appendChild(script);
