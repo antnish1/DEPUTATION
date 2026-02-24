@@ -398,4 +398,44 @@ body {
 }
 
 
+/* =========================
+   BRANCH TOOLBAR
+========================= */
 
+.branch-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* =========================
+   INDUSTRY SAVE BUTTON
+========================= */
+
+.save-btn {
+  background: #1e293b;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.4px;
+}
+
+.save-btn:hover {
+  background: #334155;
+  transform: translateY(-1px);
+}
+
+.save-btn:active {
+  transform: translateY(0px);
+}
+
+.save-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
