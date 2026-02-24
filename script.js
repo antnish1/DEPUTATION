@@ -173,15 +173,20 @@ function renderEngineers(engineers) {
 
   const rows = document.querySelectorAll("#tableBody tr");
   rows.forEach((row, index) => {
-    const woSelect = document.getElementById(`wo_${index}`);
-    woSelect.addEventListener("change", () => applyRowLockState(row, index));
-
-    document.getElementById(`labour_${index}`).addEventListener("input", () => refreshTotal(index));
-    document.getElementById(`km_${index}`).addEventListener("input", () => refreshTotal(index));
-
-    refreshTotal(index);
-    applyRowLockState(row, index);
-  });
+     const woSelect = document.getElementById(`wo_${index}`);
+   
+     woSelect.addEventListener("change", () => {
+       applyRowLockState(row, index);
+       refreshTotal(index);
+     });
+   
+     document.getElementById(`labour_${index}`).addEventListener("input", () => refreshTotal(index));
+     document.getElementById(`km_${index}`).addEventListener("input", () => refreshTotal(index));
+     document.getElementById(`machine_${index}`).addEventListener("input", () => refreshTotal(index));
+   
+     refreshTotal(index);
+     applyRowLockState(row, index);
+   });
 }
 
 function shouldLockRowByWorkType(workType) {
@@ -194,12 +199,35 @@ function toNumberOrZero(value) {
 }
 
 function refreshTotal(index) {
-  const labourValue = document.getElementById(`labour_${index}`).value.trim();
-  const kmValue = document.getElementById(`km_${index}`).value.trim();
+
+  const wo = document.getElementById(`wo_${index}`).value;
+  const machineNo = document.getElementById(`machine_${index}`).value.trim();
+  const labour = toNumberOrZero(document.getElementById(`labour_${index}`).value);
+  const km = toNumberOrZero(document.getElementById(`km_${index}`).value);
   const totalField = document.getElementById(`total_${index}`);
 
-  const total = toNumberOrZero(labourValue) + toNumberOrZero(kmValue);
-  totalField.value = total ? total : "";
+  let taDa = "";
+
+  // Only apply rules if Onsite & Machine exists
+  if (wo === "Onsite" && machineNo !== "") {
+
+    // Rule 3 (Highest Priority)
+    if (labour > 2360) {
+      taDa = 1000;
+    }
+
+    // Rule 1
+    else if (km > 50) {
+      taDa = 500;
+    }
+
+    // Rule 2
+    else {
+      taDa = 250;
+    }
+  }
+
+  totalField.value = taDa;
 }
 
 function applyRowLockState(row, index) {
