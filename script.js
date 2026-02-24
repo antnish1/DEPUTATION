@@ -525,38 +525,69 @@ function fetchMachineDetails(machineNo, index) {
 
   const machineInput = document.getElementById(`machine_${index}`);
   const customerInput = document.getElementById(`customer_${index}`);
-  const loader = document.getElementById(`customerLoader_${index}`);
+  const spinner = document.getElementById(`customerLoader_${index}`);
+  const checkIcon = document.getElementById(`customerCheck_${index}`);
 
-  const lastFetchedMachine = machineInput.getAttribute("data-fetched");
+  const lastFetched = machineInput.getAttribute("data-fetched");
+  if (lastFetched === machineNo) return;
 
-  // ✅ If already fetched for same machine → do nothing
-  if (lastFetchedMachine === machineNo) {
-    return;
-  }
-
-  // Reset state before fetch
   customerInput.value = "";
-  customerInput.readOnly = true;
-  loader.classList.remove("hidden");
+  checkIcon.classList.add("hidden");
+  spinner.classList.remove("hidden");
 
   jsonpRequest(
     { action: "getMachineDetails", machineNo },
     (response = {}) => {
 
-      loader.classList.add("hidden");
+      spinner.classList.add("hidden");
 
       if (response.customer) {
-        customerInput.value = response.customer;
 
-        // ✅ Save fetched machine
+        customerInput.value = response.customer;
+        customerInput.readOnly = true;
+
         machineInput.setAttribute("data-fetched", machineNo);
+        checkIcon.classList.remove("hidden");
 
       } else {
-        customerInput.value = "";
-        machineInput.removeAttribute("data-fetched");
-      }
 
-      customerInput.readOnly = true;
+        machineInput.removeAttribute("data-fetched");
+        showManualCustomerPopup(index);
+
+      }
     }
   );
+}
+
+function showManualCustomerPopup(index) {
+
+  const overlay = document.createElement("div");
+  overlay.className = "machine-popup-overlay";
+
+  overlay.innerHTML = `
+    <div class="machine-popup">
+      <h3>Machine No not found ❗</h3>
+      <p>Enter Customer Name Manually:</p>
+      <input type="text" id="manualCustomerInput">
+      <button id="manualCustomerSave">Save</button>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  document.getElementById("manualCustomerSave").addEventListener("click", () => {
+
+    const manualName = document.getElementById("manualCustomerInput").value.trim();
+    if (!manualName) return;
+
+    const customerInput = document.getElementById(`customer_${index}`);
+    const checkIcon = document.getElementById(`customerCheck_${index}`);
+
+    customerInput.value = manualName;
+    customerInput.readOnly = true;
+
+    checkIcon.classList.remove("hidden");
+
+    overlay.remove();
+  });
 }
