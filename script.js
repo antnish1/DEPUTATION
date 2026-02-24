@@ -50,8 +50,11 @@ function loadBranch(branch) {
 
   showLoader("Loading branch data...");
 
+  // Show hidden content
+  document.getElementById("branchContent").style.display = "block";
+  document.getElementById("branchTitle").style.display = "block";
+
   document.getElementById("branchTitle").innerText = branch;
-  document.getElementById("saveAllBtn").style.display = "inline-block";
 
   const menuLabel = document.getElementById("deputationMenuLabel");
   menuLabel.innerText = `Deputation >> ${branch} ▾`;
@@ -60,17 +63,15 @@ function loadBranch(branch) {
 
     renderEngineers(engineers);
 
-    // Now load today's data
     jsonpRequest({ action: "getTodayData", location: branch }, (data = []) => {
 
-      populateTodayData(data); // We’ll move logic into helper
+      populateTodayData(data);
 
-      hideLoader(); // 🔥 Hide ONLY after everything finished
+      hideLoader();
     });
 
   });
 }
-
 /* ===============================
    LOAD TODAY DATA
 ================================= */
