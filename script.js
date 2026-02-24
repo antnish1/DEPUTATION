@@ -153,7 +153,7 @@ function renderEngineers(engineers) {
                inputmode="numeric"
                pattern="[0-9]{10}"
                maxlength="10"
-               placeholder="10 digit">
+               placeholder="">
       </td>
 
       <!-- Complaint -->
