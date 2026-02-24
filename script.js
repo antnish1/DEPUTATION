@@ -264,6 +264,12 @@ function renderEngineers(engineers) {
 
        machineInput.addEventListener("blur", () => {
         const machineNo = machineInput.value.trim();
+      
+        // Reset cached value if changed
+        if (machineInput.getAttribute("data-fetched") !== machineNo) {
+          machineInput.removeAttribute("data-fetched");
+        }
+      
         fetchMachineDetails(machineNo, index);
       });
        
@@ -516,10 +522,18 @@ function fetchMachineDetails(machineNo, index) {
 
   if (!machineNo) return;
 
+  const machineInput = document.getElementById(`machine_${index}`);
   const customerInput = document.getElementById(`customer_${index}`);
   const loader = document.getElementById(`customerLoader_${index}`);
 
-  // Lock field and show loader
+  const lastFetchedMachine = machineInput.getAttribute("data-fetched");
+
+  // ✅ If already fetched for same machine → do nothing
+  if (lastFetchedMachine === machineNo) {
+    return;
+  }
+
+  // Reset state before fetch
   customerInput.value = "";
   customerInput.readOnly = true;
   loader.classList.remove("hidden");
@@ -532,11 +546,15 @@ function fetchMachineDetails(machineNo, index) {
 
       if (response.customer) {
         customerInput.value = response.customer;
+
+        // ✅ Save fetched machine
+        machineInput.setAttribute("data-fetched", machineNo);
+
       } else {
         customerInput.value = "";
+        machineInput.removeAttribute("data-fetched");
       }
 
-      // Keep readonly because it's system-fetched
       customerInput.readOnly = true;
     }
   );
