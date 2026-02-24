@@ -329,32 +329,32 @@ body {
 
 #deputationTable th:nth-child(2),
 #deputationTable td:nth-child(2) {
-  width: 100px; /* W/O */
+  width: 60px; /* W/O */
 }
 
 #deputationTable th:nth-child(3),
 #deputationTable td:nth-child(3) {
-  width: 100px; /* Machine No */
+  width: 70px; /* Machine No */
 }
 
 #deputationTable th:nth-child(4),
 #deputationTable td:nth-child(4) {
-  width: 200px; /* Customer */
+  width: 160px; /* Customer */
 }
 
 #deputationTable th:nth-child(5),
 #deputationTable td:nth-child(5) {
-  width: 100px; /* Contact */
+  width: 85px; /* Contact */
 }
 
 #deputationTable th:nth-child(6),
 #deputationTable td:nth-child(6) {
-  width: 250px; /* Complaint */
+  width: 220px; /* Complaint */
 }
 
 #deputationTable th:nth-child(7),
 #deputationTable td:nth-child(7) {
-  width: 50px; /* HMR */
+  width: 55px; /* HMR */
 }
 
 #deputationTable th:nth-child(8),
@@ -369,12 +369,12 @@ body {
 
 #deputationTable th:nth-child(10),
 #deputationTable td:nth-child(10) {
-  width: 70px; /* Status */
+  width: 80px; /* Status */
 }
 
 #deputationTable th:nth-child(11),
 #deputationTable td:nth-child(11) {
-  width: 70px; /* M/C Location */
+  width: 80px; /* M/C Location */
 }
 
 #deputationTable th:nth-child(12),
@@ -384,16 +384,16 @@ body {
 
 #deputationTable th:nth-child(13),
 #deputationTable td:nth-child(13) {
-  width: 70px; /* Call ID */
+  width: 60px; /* Call ID */
 }
 
 #deputationTable th:nth-child(14),
 #deputationTable td:nth-child(14) {
-  width: 60px; /* Labour */
+  width: 55px; /* Labour */
 }
 
 #deputationTable th:nth-child(15),
 #deputationTable td:nth-child(15) {
-  width: 60px; /* TA DA */
+  width: 55px; /* TA DA */
 }
 
