@@ -37,14 +37,16 @@
 
   <div id="branchContent" style="display:none;">
 
-    <h2 id="branchTitle"></h2>
-
-    <button id="saveAllBtn"
-            onclick="saveAll()"
-            style="margin-bottom:15px;">
-      💾 Save All Engineers
-    </button>
-
+    <div class="branch-toolbar">
+      <div class="branch-info">
+        <span id="branchHiddenTitle" style="display:none;"></span>
+      </div>
+  
+      <button id="saveAllBtn" class="save-btn" onclick="saveAll()">
+        Save Changes
+      </button>
+    </div>
+  
     <div class="table-wrapper">
       <table id="deputationTable">
         <thead>
@@ -69,10 +71,8 @@
         <tbody id="tableBody"></tbody>
       </table>
     </div>
-
+  
   </div>
-
-</div>
 
 <!-- =========================
      POPUP
