@@ -49,7 +49,7 @@ function jsonpRequest(params, callback) {
 function loadBranch(branch) {
 
   showLoader("Loading branch data...");
-
+  document.getElementById("saveAllBtn").disabled = false;
   // Show hidden content
   document.getElementById("branchContent").style.display = "block";
   
