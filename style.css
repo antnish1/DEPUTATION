@@ -3,7 +3,12 @@ body {
   font-family: Arial, sans-serif;
 }
 
-
+/* Remove global horizontal scroll */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 .main-content {
   width: 100%;
 }
@@ -45,6 +50,7 @@ body {
 
 
 .table-wrapper {
+  width: 100%;
   overflow-x: auto;
 }
 
@@ -155,6 +161,7 @@ body {
 
 .top-menu {
   width: 100%;
+  box-sizing: border-box;
   height: 50px;
   background: #2c3e50;
   display: flex;
