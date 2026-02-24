@@ -1,94 +1,139 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbwNibttN_UDKbhMsva3n6qZkbVlx45svpO5BZ7xe9e39Q-qRSwN7rv4_0SCyNWASvdm2A/exec";
 
-let currentCallbackName = null;
+const NON_DEPUTATION_WORK_TYPES = ["Free", "Leave", "Absent"];
+let loaderCounter = 0;
+
+function showLoader(message) {
+  const loader = document.getElementById("globalLoader");
+  const loaderText = document.getElementById("loaderText");
+
+  if (!loader || !loaderText) {
+    return;
+  }
+
+  loaderCounter += 1;
+  loaderText.innerText = message;
+  loader.classList.remove("hidden");
+}
+
+function hideLoader() {
+  const loader = document.getElementById("globalLoader");
+
+  if (!loader) {
+    return;
+  }
+
+  loaderCounter = Math.max(0, loaderCounter - 1);
+
+  if (loaderCounter === 0) {
+    loader.classList.add("hidden");
+  }
+}
+
+async function withLoader(message, asyncTask) {
+  showLoader(message);
+
+  try {
+    return await asyncTask();
+  } finally {
+    hideLoader();
+  }
+}
+
+function jsonpRequest(params) {
+  return new Promise((resolve, reject) => {
+    const callbackName = `jsonp_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+    const script = document.createElement("script");
+
+    window[callbackName] = (payload) => {
+      resolve(payload);
+      delete window[callbackName];
+      script.remove();
+    };
+
+    const query = new URLSearchParams({ ...params, callback: callbackName }).toString();
+    script.src = `${API_URL}?${query}`;
+
+    script.onerror = () => {
+      reject(new Error("Unable to load data from server."));
+      delete window[callbackName];
+      script.remove();
+    };
+
+    document.body.appendChild(script);
+  });
+}
 
 /* ===============================
    LOAD BRANCH
 ================================= */
-function loadBranch(branch) {
+async function loadBranch(branch) {
   document.getElementById("branchTitle").innerText = branch;
   document.getElementById("saveAllBtn").style.display = "inline-block";
 
-  currentCallbackName = "handleEngineers_" + Date.now();
+  try {
+    const engineers = await withLoader("Loading engineers...", () =>
+      jsonpRequest({ action: "getEngineers", location: branch })
+    );
 
-  window[currentCallbackName] = function (engineers) {
-    renderEngineers(branch, engineers);
-    loadTodayData(branch);
-  };
-
-  const script = document.createElement("script");
-  script.src =
-    API_URL +
-    "?action=getEngineers" +
-    "&location=" + encodeURIComponent(branch) +
-    "&callback=" + currentCallbackName;
-
-  document.body.appendChild(script);
+    renderEngineers(Array.isArray(engineers) ? engineers : []);
+    await loadTodayData(branch);
+  } catch (error) {
+    console.error(error);
+    alert("Unable to load engineers for this branch.");
+  }
 }
-
 
 /* ===============================
    LOAD TODAY DATA
 ================================= */
-function loadTodayData(branch) {
+async function loadTodayData(branch) {
+  try {
+    const data = await withLoader("Loading today's entries...", () =>
+      jsonpRequest({ action: "getTodayData", location: branch })
+    );
 
-  const callbackName = "handleToday_" + Date.now();
+    const rows = document.querySelectorAll("#tableBody tr");
 
-  window[callbackName] = function (data) {
-
-    data.forEach(entry => {
-
-      const rows = document.querySelectorAll("#tableBody tr");
-
+    (Array.isArray(data) ? data : []).forEach((entry) => {
       rows.forEach((row, index) => {
-
         const engineer = row.getAttribute("data-engineer");
 
-        if (engineer === entry.engineerName) {
-
-          document.getElementById(`wo_${index}`).value = entry.workshopOnsite || "";
-          document.getElementById(`call_${index}`).value = entry.callType || "";
-          document.getElementById(`ps_${index}`).value = entry.primarySecondary || "";
-          document.getElementById(`complaint_${index}`).value = entry.complaint || "";
-          document.getElementById(`customer_${index}`).value = entry.customerName || "";
-          document.getElementById(`machine_${index}`).value = entry.machineNo || "";
-          document.getElementById(`hmr_${index}`).value = entry.hmr || "";
-          document.getElementById(`status_${index}`).value = entry.breakdownStatus || "";
-          document.getElementById(`callid_${index}`).value = entry.callId || "";
-          document.getElementById(`labour_${index}`).value = entry.labourCharge || "";
-          document.getElementById(`km_${index}`).value = entry.siteDistance || "";
-          document.getElementById(`total_${index}`).value = entry.totalAllowances || "";
-
-          row.style.border = "2px solid green";
+        if (engineer !== entry.engineerName) {
+          return;
         }
 
+        document.getElementById(`wo_${index}`).value = entry.workshopOnsite || "";
+        document.getElementById(`call_${index}`).value = entry.callType || "";
+        document.getElementById(`ps_${index}`).value = entry.primarySecondary || "";
+        document.getElementById(`complaint_${index}`).value = entry.complaint || "";
+        document.getElementById(`customer_${index}`).value = entry.customerName || "";
+        document.getElementById(`machine_${index}`).value = entry.machineNo || "";
+        document.getElementById(`hmr_${index}`).value = entry.hmr || "";
+        document.getElementById(`status_${index}`).value = entry.breakdownStatus || "";
+        document.getElementById(`callid_${index}`).value = entry.callId || "";
+        document.getElementById(`labour_${index}`).value = entry.labourCharge || "";
+        document.getElementById(`km_${index}`).value = entry.siteDistance || "";
+
+        refreshTotal(index);
+        applyRowLockState(row, index);
+        row.style.border = "2px solid green";
       });
-
     });
-
-  };
-
-  const script = document.createElement("script");
-  script.src =
-    API_URL +
-    "?action=getTodayData" +
-    "&location=" + encodeURIComponent(branch) +
-    "&callback=" + callbackName;
-
-  document.body.appendChild(script);
+  } catch (error) {
+    console.error(error);
+    alert("Unable to load today's data.");
+  }
 }
-
 
 /* ===============================
    RENDER ENGINEERS (TABLE MODE)
 ================================= */
-function renderEngineers(branch, engineers) {
-
+function renderEngineers(engineers) {
   const tbody = document.getElementById("tableBody");
   tbody.innerHTML = "";
 
   engineers.forEach((engineer, index) => {
-
     const row = document.createElement("tr");
     row.setAttribute("data-engineer", engineer);
 
@@ -101,6 +146,8 @@ function renderEngineers(branch, engineers) {
           <option>Workshop</option>
           <option>Onsite</option>
           <option>Free</option>
+          <option>Leave</option>
+          <option>Absent</option>
         </select>
       </td>
 
@@ -143,21 +190,74 @@ function renderEngineers(branch, engineers) {
       </td>
 
       <td><input id="callid_${index}"></td>
-      <td><input id="labour_${index}"></td>
-      <td><input id="km_${index}"></td>
+      <td><input id="labour_${index}" inputmode="decimal"></td>
+      <td><input id="km_${index}" inputmode="decimal"></td>
       <td><input id="total_${index}" readonly></td>
     `;
 
     tbody.appendChild(row);
   });
+
+  const rows = document.querySelectorAll("#tableBody tr");
+  rows.forEach((row, index) => {
+    const woSelect = document.getElementById(`wo_${index}`);
+    woSelect.addEventListener("change", () => applyRowLockState(row, index));
+
+    document.getElementById(`labour_${index}`).addEventListener("input", () => refreshTotal(index));
+    document.getElementById(`km_${index}`).addEventListener("input", () => refreshTotal(index));
+
+    refreshTotal(index);
+    applyRowLockState(row, index);
+  });
 }
 
+function shouldLockRowByWorkType(workType) {
+  return NON_DEPUTATION_WORK_TYPES.includes(workType);
+}
+
+function toNumberOrZero(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : 0;
+}
+
+function refreshTotal(index) {
+  const labourValue = document.getElementById(`labour_${index}`).value.trim();
+  const kmValue = document.getElementById(`km_${index}`).value.trim();
+  const totalField = document.getElementById(`total_${index}`);
+
+  const total = toNumberOrZero(labourValue) + toNumberOrZero(kmValue);
+  totalField.value = total ? total : "";
+}
+
+function applyRowLockState(row, index) {
+  const workType = document.getElementById(`wo_${index}`).value;
+  const shouldLock = shouldLockRowByWorkType(workType);
+
+  const editableFields = row.querySelectorAll(
+    "td:not(:first-child):not(:nth-child(2)) input, td:not(:first-child):not(:nth-child(2)) select"
+  );
+
+  editableFields.forEach((field) => {
+    field.disabled = shouldLock;
+  });
+
+  if (shouldLock) {
+    editableFields.forEach((field) => {
+      if (field.tagName === "INPUT") {
+        field.value = "";
+      } else if (field.tagName === "SELECT") {
+        field.selectedIndex = 0;
+      }
+    });
+  }
+
+  row.classList.toggle("row-readonly", shouldLock);
+}
 
 /* ===============================
    SAVE ALL ENGINEERS
 ================================= */
 async function saveAll() {
-
   const saveBtn = document.getElementById("saveAllBtn");
   const rows = document.querySelectorAll("#tableBody tr");
 
@@ -171,17 +271,18 @@ async function saveAll() {
   saveBtn.disabled = true;
   saveBtn.innerText = "Saving... ⏳";
 
-  let savePromises = [];
+  const savePromises = [];
   let skippedCount = 0;
 
   rows.forEach((row, index) => {
-
     row.classList.remove("missing");
 
     const engineer = row.getAttribute("data-engineer");
     const machineNo = document.getElementById(`machine_${index}`).value.trim();
+    const workType = document.getElementById(`wo_${index}`).value;
+    const isNonDeputationType = shouldLockRowByWorkType(workType);
 
-    if (!machineNo) {
+    if (!machineNo && !isNonDeputationType) {
       skippedCount++;
       row.classList.add("missing");
       return;
@@ -195,11 +296,11 @@ async function saveAll() {
       primarySecondary: document.getElementById(`ps_${index}`).value,
       complaint: document.getElementById(`complaint_${index}`).value,
       customerName: document.getElementById(`customer_${index}`).value,
-      contactNumber: "", // kept for backend compatibility
-      machineNo: machineNo,
+      contactNumber: "",
+      machineNo,
       hmr: document.getElementById(`hmr_${index}`).value,
       breakdownStatus: document.getElementById(`status_${index}`).value,
-      siteLocation: "", // kept for backend compatibility
+      siteLocation: "",
       callId: document.getElementById(`callid_${index}`).value,
       labourCharge: document.getElementById(`labour_${index}`).value,
       siteDistance: document.getElementById(`km_${index}`).value,
@@ -210,8 +311,8 @@ async function saveAll() {
       method: "POST",
       body: JSON.stringify(payload)
     })
-    .then(res => res.json())
-    .then(response => ({ response, row }));
+      .then((res) => res.json())
+      .then((response) => ({ response, row }));
 
     savePromises.push(request);
   });
@@ -224,33 +325,25 @@ async function saveAll() {
   }
 
   try {
-
-    const results = await Promise.all(savePromises);
+    const results = await withLoader("Saving entries...", () => Promise.all(savePromises));
 
     let successCount = 0;
     let duplicateCount = 0;
 
     results.forEach(({ response, row }) => {
-
       if (response.status === "success") {
         successCount++;
         row.style.opacity = "0.6";
-      }
-
-      else if (response.status === "updated") {
+      } else if (response.status === "updated") {
         successCount++;
         row.style.border = "2px solid orange";
-      }
-
-      else if (response.status === "duplicate") {
+      } else if (response.status === "duplicate") {
         duplicateCount++;
         row.style.border = "2px solid red";
       }
-
     });
 
     showSummaryPopup(successCount, duplicateCount, skippedCount);
-
   } catch (error) {
     console.error("Save error:", error);
     alert("Unexpected error occurred ❗");
@@ -260,22 +353,12 @@ async function saveAll() {
   saveBtn.innerText = "💾 Save All Engineers";
 }
 
-
 /* ===============================
    POPUP FUNCTIONS
 ================================= */
-function showDuplicatePopup(engineer, machine) {
-  document.getElementById("popupText").innerText =
-    `${engineer} has already been deputed for ${machine} today`;
-
-  document.getElementById("popup").classList.remove("hidden");
-}
-
 function showSummaryPopup(saved, duplicates, skipped) {
   document.getElementById("popupText").innerText =
-    `Saved: ${saved}\n` +
-    `Duplicates: ${duplicates}\n` +
-    `Incomplete: ${skipped}`;
+    `Saved: ${saved}\n` + `Duplicates: ${duplicates}\n` + `Incomplete: ${skipped}`;
 
   document.getElementById("popup").classList.remove("hidden");
 }

@@ -47,11 +47,6 @@ body {
 }
 
 
-.engineer-card.missing {
-  border: 2px solid red;
-  background: #ffe6e6;
-}
-
 
 .popup {
   position: fixed;
@@ -107,3 +102,71 @@ body {
   font-size: 12px;
 }
 
+
+
+.row-readonly td:not(:first-child):not(:nth-child(2)) {
+  opacity: 0.45;
+  background: #f3f4f6;
+}
+
+.row-readonly td:not(:first-child):not(:nth-child(2)) input,
+.row-readonly td:not(:first-child):not(:nth-child(2)) select {
+  background: transparent;
+  cursor: not-allowed;
+}
+
+#deputationTable tr.missing td {
+  background: #ffe6e6;
+}
+
+#deputationTable tr.missing {
+  outline: 2px solid #d63031;
+}
+
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loader-box {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 220px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 4px solid #dfe6e9;
+  border-top-color: #2c3e50;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 10px;
+}
+
+#loaderText {
+  margin: 0;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.hidden {
+  display: none !important;
+}
