@@ -138,7 +138,12 @@ function renderEngineers(engineers) {
       <td><input id="machine_${index}"></td>
 
       <!-- Customer -->
-      <td><input id="customer_${index}"></td>
+      <td class="customer-cell">
+        <div class="customer-wrapper">
+          <input id="customer_${index}" readonly>
+          <div class="customer-loader hidden" id="customerLoader_${index}"></div>
+        </div>
+      </td>
 
       <!-- Contact No (10 digit mobile) -->
       <td>
@@ -511,14 +516,28 @@ function fetchMachineDetails(machineNo, index) {
 
   if (!machineNo) return;
 
+  const customerInput = document.getElementById(`customer_${index}`);
+  const loader = document.getElementById(`customerLoader_${index}`);
+
+  // Lock field and show loader
+  customerInput.value = "";
+  customerInput.readOnly = true;
+  loader.classList.remove("hidden");
+
   jsonpRequest(
     { action: "getMachineDetails", machineNo },
     (response = {}) => {
 
+      loader.classList.add("hidden");
+
       if (response.customer) {
-        document.getElementById(`customer_${index}`).value = response.customer;
+        customerInput.value = response.customer;
+      } else {
+        customerInput.value = "";
       }
 
+      // Keep readonly because it's system-fetched
+      customerInput.readOnly = true;
     }
   );
 }
