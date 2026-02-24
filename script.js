@@ -525,13 +525,12 @@ function fetchMachineDetails(machineNo, index) {
   const machineInput = document.getElementById(`machine_${index}`);
   const customerInput = document.getElementById(`customer_${index}`);
   const spinner = document.getElementById(`customerLoader_${index}`);
-  const checkIcon = document.getElementById(`customerCheck_${index}`);
 
   const lastFetched = machineInput.getAttribute("data-fetched");
+
+  // Prevent duplicate fetch
   if (lastFetched === machineNo) return;
 
-  customerInput.value = "";
-  checkIcon.classList.add("hidden");
   spinner.classList.remove("hidden");
 
   jsonpRequest(
@@ -541,19 +540,11 @@ function fetchMachineDetails(machineNo, index) {
       spinner.classList.add("hidden");
 
       if (response.customer) {
-
         customerInput.value = response.customer;
-        customerInput.readOnly = true;
-
-        machineInput.setAttribute("data-fetched", machineNo);
-        checkIcon.classList.remove("hidden");
-
-      } else {
-
-        machineInput.removeAttribute("data-fetched");
-        showManualCustomerPopup(index);
-
       }
+
+      // Mark as fetched even if not found
+      machineInput.setAttribute("data-fetched", machineNo);
     }
   );
 }
