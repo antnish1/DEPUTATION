@@ -140,9 +140,8 @@ function renderEngineers(engineers) {
       <!-- Customer -->
       <td class="customer-cell">
         <div class="customer-wrapper">
-          <input id="customer_${index}" readonly>
+          <input id="customer_${index}" class="customer-input">
           <div class="customer-spinner hidden" id="customerLoader_${index}"></div>
-         
         </div>
       </td>
 
