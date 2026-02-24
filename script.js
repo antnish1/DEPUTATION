@@ -52,9 +52,9 @@ function loadBranch(branch) {
 
   // Show hidden content
   document.getElementById("branchContent").style.display = "block";
-  document.getElementById("branchTitle").style.display = "block";
+  
 
-  document.getElementById("branchTitle").innerText = branch;
+  document.getElementById("branchHiddenTitle").innerText = branch;
 
   const menuLabel = document.getElementById("deputationMenuLabel");
   menuLabel.innerText = `Deputation >> ${branch} ▾`;
