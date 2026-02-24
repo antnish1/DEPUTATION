@@ -141,7 +141,7 @@ function renderEngineers(engineers) {
       <td class="customer-cell">
         <div class="customer-wrapper">
           <input id="customer_${index}" readonly>
-          <div class="customer-loader hidden" id="customerLoader_${index}"></div>
+          <div class="customer-spinner hidden" id="customerLoader_${index}"></div>
         </div>
       </td>
 
