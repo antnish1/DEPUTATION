@@ -11,6 +11,7 @@
      TOP MENU BAR
 ========================= -->
 <div class="top-menu">
+
   <div class="menu-left">
     <div class="menu-item dropdown">
       <span id="deputationMenuLabel">Deputation ▾</span>
@@ -28,6 +29,16 @@
       </div>
     </div>
   </div>
+
+  <div class="menu-right">
+    <button id="saveAllBtn"
+            class="menu-save-btn"
+            onclick="saveAll()"
+            disabled>
+      Save Changes
+    </button>
+  </div>
+
 </div>
 
 <!-- =========================
@@ -42,9 +53,7 @@
         <span id="branchHiddenTitle" style="display:none;"></span>
       </div>
   
-      <button id="saveAllBtn" class="save-btn" onclick="saveAll()">
-        Save Changes
-      </button>
+      
     </div>
   
     <div class="table-wrapper">
