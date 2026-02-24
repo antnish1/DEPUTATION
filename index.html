@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Branch-wise Engineer Deputation</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<!-- TOP MENU BAR -->
+<!-- =========================
+     TOP MENU BAR
+========================= -->
 <div class="top-menu">
   <div class="menu-left">
     <div class="menu-item dropdown">
@@ -27,51 +30,49 @@
   </div>
 </div>
 
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+<div class="main-content">
 
-
-  <!-- RIGHT PANEL -->
-<div class="content">
   <h2 id="branchTitle">Select a Branch</h2>
 
-  <!-- Save All Button -->
-  <button id="saveAllBtn" onclick="saveAll()" style="display:none; margin-bottom:15px;">
+  <button id="saveAllBtn"
+          onclick="saveAll()"
+          style="display:none; margin-bottom:15px;">
     💾 Save All Engineers
   </button>
 
-  <!-- Engineers will load here -->
   <div class="table-wrapper">
-  <table id="deputationTable">
-    <thead>
-      <tr>
-        <th>Engineer</th>
-        <th>W/O</th>
-        <th>Call Type</th>
-        <th>P/S</th>
-        <th>Complaint</th>
-        <th>Customer</th>
-        <th>Machine No.</th>
-        <th>Contact No.</th>
-        <th>HMR</th>
-        <th>Status</th>
-        <th>Call ID</th>
-        <th>Labour</th>
-        <th>KM</th>
-        <th>M/C Location</th>
-        <th>TA DA</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody">
-    </tbody>
-  </table>
-</div>
+    <table id="deputationTable">
+      <thead>
+        <tr>
+          <th>Engineer</th>
+          <th>W/O</th>
+          <th>Call Type</th>
+          <th>P/S</th>
+          <th>Complaint</th>
+          <th>Customer</th>
+          <th>Machine No.</th>
+          <th>Contact No.</th>
+          <th>HMR</th>
+          <th>Status</th>
+          <th>Call ID</th>
+          <th>Labour</th>
+          <th>KM</th>
+          <th>M/C Location</th>
+          <th>TA DA</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
 
 </div>
 
-
-</div>
-
-<script src="script.js"></script>
-
+<!-- =========================
+     POPUP
+========================= -->
 <div id="popup" class="popup hidden">
   <div class="popup-box">
     <p id="popupText"></p>
@@ -79,20 +80,20 @@
   </div>
 </div>
 
-  
-<!-- GLOBAL LOADER -->
+<!-- =========================
+     GLOBAL LOADER
+========================= -->
 <div id="globalLoader" class="loader-overlay hidden">
   <div class="loader-box">
     <div class="spinner"></div>
     <p id="loaderText">Loading...</p>
   </div>
 </div>
-  
-</body>
-</html>
 
-</div>
+<!-- =========================
+     SCRIPT
+========================= -->
+<script src="script.js"></script>
 
-  
 </body>
 </html>
