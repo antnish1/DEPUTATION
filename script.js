@@ -575,16 +575,20 @@ function showManualCustomerPopup(index) {
 
   document.body.appendChild(overlay);
 
+  const machineInput = document.getElementById(`machine_${index}`);
+  const customerInput = document.getElementById(`customer_${index}`);
+  const checkIcon = document.getElementById(`customerCheck_${index}`);
+
   document.getElementById("manualCustomerSave").addEventListener("click", () => {
 
     const manualName = document.getElementById("manualCustomerInput").value.trim();
     if (!manualName) return;
 
-    const customerInput = document.getElementById(`customer_${index}`);
-    const checkIcon = document.getElementById(`customerCheck_${index}`);
-
     customerInput.value = manualName;
     customerInput.readOnly = true;
+
+    // ✅ VERY IMPORTANT — mark machine as fetched
+    machineInput.setAttribute("data-fetched", machineInput.value.trim());
 
     checkIcon.classList.remove("hidden");
 
