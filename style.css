@@ -397,3 +397,10 @@ body {
   width: 55px; /* TA DA */
 }
 
+
+.main-content {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
