@@ -213,3 +213,49 @@ body {
 .main-content {
   padding: 20px;
 }
+
+/* =========================
+   CUSTOMER LOOKUP LOADER
+========================= */
+
+.customer-wrapper {
+  position: relative;
+}
+
+.customer-wrapper input {
+  width: 100%;
+}
+
+.customer-loader {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 10px;
+  border: 2px solid #2c3e50;
+  border-radius: 2px;
+  box-sizing: border-box;
+  animation: pulseBattery 1s infinite linear;
+}
+
+.customer-loader::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 2px;
+  width: 3px;
+  height: 6px;
+  background: #2c3e50;
+  border-radius: 1px;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes pulseBattery {
+  0% { background: transparent; }
+  50% { background: #2c3e50; }
+  100% { background: transparent; }
+}
