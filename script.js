@@ -497,3 +497,20 @@ function showSummaryPopup(saved, duplicates, skipped) {
 function closePopup() {
   document.getElementById("popup").classList.add("hidden");
 }
+
+
+function fetchMachineDetails(machineNo, index) {
+
+  if (!machineNo) return;
+
+  jsonpRequest(
+    { action: "getMachineDetails", machineNo },
+    (response = {}) => {
+
+      if (response.customer) {
+        document.getElementById(`customer_${index}`).value = response.customer;
+      }
+
+    }
+  );
+}
