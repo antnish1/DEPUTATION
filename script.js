@@ -64,16 +64,18 @@ function loadBranch(branch) {
    LOAD TODAY DATA
 ================================= */
 function loadTodayData(branch) {
+
   jsonpRequest({ action: "getTodayData", location: branch }, (data = []) => {
+
     const rows = document.querySelectorAll("#tableBody tr");
 
     data.forEach((entry) => {
+
       rows.forEach((row, index) => {
+
         const engineer = row.getAttribute("data-engineer");
 
-        if (engineer !== entry.engineerName) {
-          return;
-        }
+        if (engineer !== entry.engineerName) return;
 
         document.getElementById(`wo_${index}`).value = entry.workshopOnsite || "";
         document.getElementById(`call_${index}`).value = entry.callType || "";
@@ -89,11 +91,16 @@ function loadTodayData(branch) {
         document.getElementById(`location_${index}`).value = entry.siteLocation || "";
         document.getElementById(`km_${index}`).value = entry.siteDistance || "";
 
-        refreshTotal(index);
         applyRowLockState(row, index);
         row.style.border = "2px solid green";
+
       });
+
     });
+
+    // 🔥 IMPORTANT: Recalculate once AFTER all data is loaded
+    recalculateTADA();
+
   });
 }
 
@@ -172,22 +179,34 @@ function renderEngineers(engineers) {
   });
 
   const rows = document.querySelectorAll("#tableBody tr");
-  rows.forEach((row, index) => {
-     const woSelect = document.getElementById(`wo_${index}`);
+   rows.forEach((row, index) => {
    
+     const woSelect = document.getElementById(`wo_${index}`);
+     const labourInput = document.getElementById(`labour_${index}`);
+     const kmInput = document.getElementById(`km_${index}`);
+     const machineInput = document.getElementById(`machine_${index}`);
+   
+     // W/O change
      woSelect.addEventListener("change", () => {
        applyRowLockState(row, index);
-       refreshTotal(index);
+       recalculateTADA();
      });
    
-     document.getElementById(`labour_${index}`).addEventListener("input", () => refreshTotal(index));
-     document.getElementById(`km_${index}`).addEventListener("input", () => refreshTotal(index));
-     document.getElementById(`machine_${index}`).addEventListener("input", () => refreshTotal(index));
+     // Labour change
+     labourInput.addEventListener("input", recalculateTADA);
    
-     refreshTotal(index);
+     // KM change
+     kmInput.addEventListener("input", recalculateTADA);
+   
+     // Machine No change
+     machineInput.addEventListener("input", recalculateTADA);
+   
+     // Initial row setup
      applyRowLockState(row, index);
    });
-}
+   
+   // After all rows are initialized, calculate once
+   recalculateTADA();
 
 function shouldLockRowByWorkType(workType) {
   return NON_DEPUTATION_WORK_TYPES.includes(workType);
@@ -198,36 +217,86 @@ function toNumberOrZero(value) {
   return Number.isFinite(number) ? number : 0;
 }
 
-function refreshTotal(index) {
+function recalculateTADA() {
 
-  const wo = document.getElementById(`wo_${index}`).value;
-  const machineNo = document.getElementById(`machine_${index}`).value.trim();
-  const labour = toNumberOrZero(document.getElementById(`labour_${index}`).value);
-  const km = toNumberOrZero(document.getElementById(`km_${index}`).value);
-  const totalField = document.getElementById(`total_${index}`);
+  const rows = document.querySelectorAll("#tableBody tr");
 
-  let taDa = "";
+  // Group rows by Machine No
+  const machineGroups = {};
 
-  // Only apply rules if Onsite & Machine exists
-  if (wo === "Onsite" && machineNo !== "") {
+  rows.forEach((row, index) => {
+    const wo = document.getElementById(`wo_${index}`).value;
+    const machineNo = document.getElementById(`machine_${index}`).value.trim();
 
-    // Rule 3 (Highest Priority)
-    if (labour > 2360) {
-      taDa = 1000;
+    if (wo !== "Onsite" || machineNo === "") {
+      document.getElementById(`total_${index}`).value = "";
+      return;
     }
 
-    // Rule 1
-    else if (km > 50) {
-      taDa = 500;
+    if (!machineGroups[machineNo]) {
+      machineGroups[machineNo] = [];
     }
 
-    // Rule 2
-    else {
-      taDa = 250;
-    }
-  }
+    machineGroups[machineNo].push(index);
+  });
 
-  totalField.value = taDa;
+  // Process each machine group
+  Object.keys(machineGroups).forEach(machineNo => {
+
+    const group = machineGroups[machineNo];
+    const engineerCount = group.length;
+
+    let highLabourCount = 0;
+
+    group.forEach(index => {
+      const labour = toNumberOrZero(document.getElementById(`labour_${index}`).value);
+      if (labour >= 2360) highLabourCount++;
+    });
+
+    // Determine KM slab (take highest KM in group)
+    let maxKM = 0;
+    group.forEach(index => {
+      const km = toNumberOrZero(document.getElementById(`km_${index}`).value);
+      if (km > maxKM) maxKM = km;
+    });
+
+    // CASE 2: At least one labour ≥ 2360
+    if (highLabourCount > 0) {
+
+      if (highLabourCount === engineerCount) {
+        // All have high labour → each gets 1000
+        group.forEach(index => {
+          document.getElementById(`total_${index}`).value = 1000;
+        });
+      } else {
+        // Mixed case → divide 1000 equally
+        const divided = Math.floor(1000 / engineerCount);
+        group.forEach(index => {
+          document.getElementById(`total_${index}`).value = divided;
+        });
+      }
+
+      return;
+    }
+
+    // CASE 1: All labour < 2360
+    let slabAmount = 0;
+
+    if (maxKM >= 150) {
+      slabAmount = 750;
+    } else if (maxKM > 50) {
+      slabAmount = 500;
+    } else {
+      slabAmount = 250;
+    }
+
+    const divided = Math.floor(slabAmount / engineerCount);
+
+    group.forEach(index => {
+      document.getElementById(`total_${index}`).value = divided;
+    });
+
+  });
 }
 
 function applyRowLockState(row, index) {
