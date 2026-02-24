@@ -22,7 +22,6 @@ function hideLoader() {
 
 
 function jsonpRequest(params, callback) {
-  showLoader("Fetching data...");
 
   const callbackName = `jsonp_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
@@ -30,7 +29,6 @@ function jsonpRequest(params, callback) {
     callback(payload);
     delete window[callbackName];
     script.remove();
-    hideLoader();
   };
 
   const query = new URLSearchParams({ ...params, callback: callbackName }).toString();
@@ -40,76 +38,74 @@ function jsonpRequest(params, callback) {
   script.onerror = () => {
     delete window[callbackName];
     script.remove();
-    hideLoader();
     alert("Unable to load data from server ❗");
   };
 
   document.body.appendChild(script);
 }
-
 /* ===============================
    LOAD BRANCH
 ================================= */
 function loadBranch(branch) {
 
-  // Update page title
-  document.getElementById("branchTitle").innerText = branch;
+  showLoader("Loading branch data...");
 
-  // Show save button
+  document.getElementById("branchTitle").innerText = branch;
   document.getElementById("saveAllBtn").style.display = "inline-block";
 
-  // 🔥 Update menu label
   const menuLabel = document.getElementById("deputationMenuLabel");
   menuLabel.innerText = `Deputation >> ${branch} ▾`;
 
   jsonpRequest({ action: "getEngineers", location: branch }, (engineers = []) => {
+
     renderEngineers(engineers);
-    loadTodayData(branch);
+
+    // Now load today's data
+    jsonpRequest({ action: "getTodayData", location: branch }, (data = []) => {
+
+      populateTodayData(data); // We’ll move logic into helper
+
+      hideLoader(); // 🔥 Hide ONLY after everything finished
+    });
+
   });
 }
 
 /* ===============================
    LOAD TODAY DATA
 ================================= */
-function loadTodayData(branch) {
+function populateTodayData(data) {
 
-  jsonpRequest({ action: "getTodayData", location: branch }, (data = []) => {
+  const rows = document.querySelectorAll("#tableBody tr");
 
-    const rows = document.querySelectorAll("#tableBody tr");
+  data.forEach((entry) => {
 
-    data.forEach((entry) => {
+    rows.forEach((row, index) => {
 
-      rows.forEach((row, index) => {
+      const engineer = row.getAttribute("data-engineer");
+      if (engineer !== entry.engineerName) return;
 
-        const engineer = row.getAttribute("data-engineer");
+      document.getElementById(`wo_${index}`).value = entry.workshopOnsite || "";
+      document.getElementById(`call_${index}`).value = entry.callType || "";
+      document.getElementById(`ps_${index}`).value = entry.primarySecondary || "";
+      document.getElementById(`complaint_${index}`).value = entry.complaint || "";
+      document.getElementById(`customer_${index}`).value = entry.customerName || "";
+      document.getElementById(`machine_${index}`).value = entry.machineNo || "";
+      document.getElementById(`contact_${index}`).value = entry.contactNumber || "";
+      document.getElementById(`hmr_${index}`).value = entry.hmr || "";
+      document.getElementById(`status_${index}`).value = entry.breakdownStatus || "";
+      document.getElementById(`callid_${index}`).value = entry.callId || "";
+      document.getElementById(`labour_${index}`).value = entry.labourCharge || "";
+      document.getElementById(`location_${index}`).value = entry.siteLocation || "";
+      document.getElementById(`km_${index}`).value = entry.siteDistance || "";
 
-        if (engineer !== entry.engineerName) return;
-
-        document.getElementById(`wo_${index}`).value = entry.workshopOnsite || "";
-        document.getElementById(`call_${index}`).value = entry.callType || "";
-        document.getElementById(`ps_${index}`).value = entry.primarySecondary || "";
-        document.getElementById(`complaint_${index}`).value = entry.complaint || "";
-        document.getElementById(`customer_${index}`).value = entry.customerName || "";
-        document.getElementById(`machine_${index}`).value = entry.machineNo || "";
-        document.getElementById(`contact_${index}`).value = entry.contactNumber || "";
-        document.getElementById(`hmr_${index}`).value = entry.hmr || "";
-        document.getElementById(`status_${index}`).value = entry.breakdownStatus || "";
-        document.getElementById(`callid_${index}`).value = entry.callId || "";
-        document.getElementById(`labour_${index}`).value = entry.labourCharge || "";
-        document.getElementById(`location_${index}`).value = entry.siteLocation || "";
-        document.getElementById(`km_${index}`).value = entry.siteDistance || "";
-
-        applyRowLockState(row, index);
-        row.style.border = "2px solid green";
-
-      });
-
+      applyRowLockState(row, index);
+      row.style.border = "2px solid green";
     });
 
-    // 🔥 IMPORTANT: Recalculate once AFTER all data is loaded
-    recalculateTADA();
-
   });
+
+  recalculateTADA();
 }
 
 /* ===============================
