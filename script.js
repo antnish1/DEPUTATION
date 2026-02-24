@@ -51,8 +51,16 @@ function jsonpRequest(params, callback) {
    LOAD BRANCH
 ================================= */
 function loadBranch(branch) {
+
+  // Update page title
   document.getElementById("branchTitle").innerText = branch;
+
+  // Show save button
   document.getElementById("saveAllBtn").style.display = "inline-block";
+
+  // 🔥 Update menu label
+  const menuLabel = document.getElementById("deputationMenuLabel");
+  menuLabel.innerText = `Deputation >> ${branch} ▾`;
 
   jsonpRequest({ action: "getEngineers", location: branch }, (engineers = []) => {
     renderEngineers(engineers);
