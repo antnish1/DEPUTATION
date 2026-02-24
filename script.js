@@ -415,7 +415,7 @@ async function saveAll() {
     return;
   }
 
-  const branch = document.getElementById("branchTitle").innerText;
+  const branch = document.getElementById("branchHiddenTitle").innerText;
 
   saveBtn.disabled = true;
   saveBtn.innerText = "Saving... ⏳";
