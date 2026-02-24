@@ -227,6 +227,9 @@ function applyRowLockState(row, index) {
    SAVE ALL ENGINEERS
 ================================= */
 async function saveAll() {
+
+  showLoader("Saving data..."); 
+   
   const saveBtn = document.getElementById("saveAllBtn");
   const rows = document.querySelectorAll("#tableBody tr");
 
@@ -317,9 +320,11 @@ async function saveAll() {
     console.error("Save error:", error);
     alert("Unexpected error occurred ❗");
   }
-
+   hideLoader();
   saveBtn.disabled = false;
   saveBtn.innerText = "💾 Save All Engineers";
+
+   
 }
 
 /* ===============================
