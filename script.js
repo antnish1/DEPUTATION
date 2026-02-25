@@ -379,16 +379,33 @@ function applyRowLockState(row, index) {
   const workType = document.getElementById(`wo_${index}`).value;
   const shouldLock = shouldLockRowByWorkType(workType);
 
-  const editableFields = row.querySelectorAll(
+  const allFields = row.querySelectorAll(
     "td:not(:first-child):not(:nth-child(2)) input, td:not(:first-child):not(:nth-child(2)) select"
   );
 
-  editableFields.forEach((field) => {
+  allFields.forEach((field) => {
+
+    const isComplaintField = field.id === `complaint_${index}`;
+
+    // 🚨 Complaint should NEVER be disabled
+    if (isComplaintField) {
+      field.disabled = false;
+      return;
+    }
+
     field.disabled = shouldLock;
   });
 
+  // If locking (Free / Leave / Absent)
   if (shouldLock) {
-    editableFields.forEach((field) => {
+
+    allFields.forEach((field) => {
+
+      const isComplaintField = field.id === `complaint_${index}`;
+
+      // 🚨 Do NOT clear Complaint
+      if (isComplaintField) return;
+
       if (field.tagName === "INPUT") {
         field.value = "";
       } else if (field.tagName === "SELECT") {
@@ -431,11 +448,25 @@ async function saveAll() {
     const workType = document.getElementById(`wo_${index}`).value;
     const isNonDeputationType = shouldLockRowByWorkType(workType);
 
-    if (!machineNo && !isNonDeputationType) {
-      skippedCount++;
-      row.classList.add("missing");
-      return;
-    }
+    const complaint = document.getElementById(`complaint_${index}`).value.trim();
+
+      let isRowInvalid = false;
+      
+      // 🚨 Complaint is ALWAYS mandatory
+      if (!complaint) {
+        isRowInvalid = true;
+      }
+      
+      // 🚨 Machine No mandatory ONLY if not Free/Leave/Absent
+      if (!machineNo && !isNonDeputationType) {
+        isRowInvalid = true;
+      }
+      
+      if (isRowInvalid) {
+        skippedCount++;
+        row.classList.add("missing");
+        return;
+      }
 
     const payload = {
       officeLocation: branch,
