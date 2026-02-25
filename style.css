@@ -497,3 +497,8 @@ html, body {
   background: #64748b;
   cursor: not-allowed;
 }
+
+.required-star {
+  color: #d63031;
+  font-weight: bold;
+}
