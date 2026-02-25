@@ -77,33 +77,55 @@ function loadBranch(branch) {
 ================================= */
 function populateTodayData(data) {
 
-  const rows = document.querySelectorAll("#tableBody tr");
+  const tbody = document.getElementById("tableBody");
+  const usedRows = new Set();
 
   data.forEach((entry) => {
 
-    rows.forEach((row, index) => {
+    let rows = [...tbody.querySelectorAll("tr")];
 
+    // Try to find unused base row
+    let targetRow = rows.find((row, index) => {
       const engineer = row.getAttribute("data-engineer");
-      if (engineer !== entry.engineerName) return;
-
-      document.getElementById(`wo_${index}`).value = entry.workshopOnsite || "";
-      document.getElementById(`call_${index}`).value = entry.callType || "";
-      document.getElementById(`ps_${index}`).value = entry.primarySecondary || "";
-      document.getElementById(`complaint_${index}`).value = entry.complaint || "";
-      document.getElementById(`customer_${index}`).value = entry.customerName || "";
-      document.getElementById(`machine_${index}`).value = entry.machineNo || "";
-      document.getElementById(`contact_${index}`).value = entry.contactNumber || "";
-      document.getElementById(`hmr_${index}`).value = entry.hmr || "";
-      document.getElementById(`status_${index}`).value = entry.breakdownStatus || "";
-      document.getElementById(`callid_${index}`).value = entry.callId || "";
-      document.getElementById(`labour_${index}`).value = entry.labourCharge || "";
-      document.getElementById(`location_${index}`).value = entry.siteLocation || "";
-      document.getElementById(`km_${index}`).value = entry.siteDistance || "";
-
-      applyRowLockState(row, index);
-      row.style.border = "2px solid green";
+      return engineer === entry.engineerName && !usedRows.has(index);
     });
 
+    let rowIndex;
+
+    // If no available base row, create additional row
+    if (!targetRow) {
+      addAdditionalRow();
+      rows = [...tbody.querySelectorAll("tr")];
+      rowIndex = rows.length - 1;
+      targetRow = rows[rowIndex];
+
+      // Set engineer dropdown value
+      const engineerDropdown = targetRow.querySelector("select[id^='engineer_']");
+      if (engineerDropdown) {
+        engineerDropdown.value = entry.engineerName;
+      }
+    } else {
+      rowIndex = rows.indexOf(targetRow);
+    }
+
+    usedRows.add(rowIndex);
+
+    // Fill data
+    document.getElementById(`wo_${rowIndex}`).value = entry.workshopOnsite || "";
+    document.getElementById(`call_${rowIndex}`).value = entry.callType || "";
+    document.getElementById(`ps_${rowIndex}`).value = entry.primarySecondary || "";
+    document.getElementById(`complaint_${rowIndex}`).value = entry.complaint || "";
+    document.getElementById(`customer_${rowIndex}`).value = entry.customerName || "";
+    document.getElementById(`machine_${rowIndex}`).value = entry.machineNo || "";
+    document.getElementById(`contact_${rowIndex}`).value = entry.contactNumber || "";
+    document.getElementById(`hmr_${rowIndex}`).value = entry.hmr || "";
+    document.getElementById(`status_${rowIndex}`).value = entry.breakdownStatus || "";
+    document.getElementById(`callid_${rowIndex}`).value = entry.callId || "";
+    document.getElementById(`labour_${rowIndex}`).value = entry.labourCharge || "";
+    document.getElementById(`location_${rowIndex}`).value = entry.siteLocation || "";
+    document.getElementById(`km_${rowIndex}`).value = entry.siteDistance || "";
+
+    applyRowLockState(targetRow, rowIndex);
   });
 
   recalculateTADA();
