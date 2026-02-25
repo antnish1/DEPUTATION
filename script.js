@@ -249,9 +249,19 @@ function renderEngineers(engineers) {
 
     // W/O change
     woSelect.addEventListener("change", () => {
-      applyRowLockState(row, index);
-      recalculateTADA();
-    });
+        applyRowLockState(row, index);
+        recalculateTADA();
+      
+        const workType = woSelect.value;
+        const complaintInput = document.getElementById(`complaint_${index}`);
+      
+        // 🚀 Auto focus complaint for non-deputation types
+        if (NON_DEPUTATION_WORK_TYPES.includes(workType)) {
+          setTimeout(() => {
+            complaintInput.focus();
+          }, 50);
+        }
+      });
 
     // Labour change
     labourInput.addEventListener("input", recalculateTADA);
