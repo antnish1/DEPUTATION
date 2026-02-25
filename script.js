@@ -405,8 +405,6 @@ function applyRowLockState(row, index) {
 ================================= */
 async function saveAll() {
 
-  showLoader("Saving data..."); 
-   
   const saveBtn = document.getElementById("saveAllBtn");
   const rows = document.querySelectorAll("#tableBody tr");
 
@@ -415,15 +413,17 @@ async function saveAll() {
     return;
   }
 
-  const branch = document.getElementById("branchHiddenTitle").innerText;
-
+  showLoader("Saving data...");
   saveBtn.disabled = true;
   saveBtn.innerText = "Saving... ⏳";
+
+  const branch = document.getElementById("branchHiddenTitle").innerText;
 
   const savePromises = [];
   let skippedCount = 0;
 
   rows.forEach((row, index) => {
+
     row.classList.remove("missing");
 
     const engineer = row.getAttribute("data-engineer");
@@ -438,42 +438,45 @@ async function saveAll() {
     }
 
     const payload = {
-     officeLocation: branch,
-     engineerName: engineer,
-     workshopOnsite: document.getElementById(`wo_${index}`).value,
-     callType: document.getElementById(`call_${index}`).value,
-     primarySecondary: document.getElementById(`ps_${index}`).value,
-     complaint: document.getElementById(`complaint_${index}`).value,
-     customerName: document.getElementById(`customer_${index}`).value,
-     contactNumber: document.getElementById(`contact_${index}`).value,
-     machineNo: document.getElementById(`machine_${index}`).value,
-     hmr: document.getElementById(`hmr_${index}`).value,
-     breakdownStatus: document.getElementById(`status_${index}`).value,
-     siteLocation: document.getElementById(`location_${index}`).value,
-     callId: document.getElementById(`callid_${index}`).value,
-     labourCharge: document.getElementById(`labour_${index}`).value,
-     siteDistance: document.getElementById(`km_${index}`).value,
-     totalAllowances: document.getElementById(`total_${index}`).value
-   };
+      officeLocation: branch,
+      engineerName: engineer,
+      workshopOnsite: document.getElementById(`wo_${index}`).value,
+      callType: document.getElementById(`call_${index}`).value,
+      primarySecondary: document.getElementById(`ps_${index}`).value,
+      complaint: document.getElementById(`complaint_${index}`).value,
+      customerName: document.getElementById(`customer_${index}`).value,
+      contactNumber: document.getElementById(`contact_${index}`).value,
+      machineNo: machineNo,
+      hmr: document.getElementById(`hmr_${index}`).value,
+      breakdownStatus: document.getElementById(`status_${index}`).value,
+      siteLocation: document.getElementById(`location_${index}`).value,
+      callId: document.getElementById(`callid_${index}`).value,
+      labourCharge: document.getElementById(`labour_${index}`).value,
+      siteDistance: document.getElementById(`km_${index}`).value,
+      totalAllowances: document.getElementById(`total_${index}`).value
+    };
 
     const request = fetch(API_URL, {
       method: "POST",
       body: JSON.stringify(payload)
     })
-      .then((res) => res.json())
-      .then((response) => ({ response, row }));
+      .then(res => res.json())
+      .then(response => ({ response, row }));
 
     savePromises.push(request);
   });
 
+  // 🚨 FIX: Handle empty saves BEFORE waiting
   if (!savePromises.length) {
+    hideLoader();  // ✅ IMPORTANT FIX
     alert("No valid entries to save ❗");
     saveBtn.disabled = false;
-    saveBtn.innerText = "💾 Save All Engineers";
+    saveBtn.innerText = "Save Changes";
     return;
   }
 
   try {
+
     const results = await Promise.all(savePromises);
 
     let successCount = 0;
@@ -493,15 +496,16 @@ async function saveAll() {
     });
 
     showSummaryPopup(successCount, duplicateCount, skippedCount);
+
   } catch (error) {
     console.error("Save error:", error);
     alert("Unexpected error occurred ❗");
   }
-   hideLoader();
-  saveBtn.disabled = false;
-  saveBtn.innerText = "💾 Save All Engineers";
 
-   
+  // ✅ Always clean up
+  hideLoader();
+  saveBtn.disabled = false;
+  saveBtn.innerText = "Save Changes";
 }
 
 /* ===============================
