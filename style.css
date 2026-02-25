@@ -89,10 +89,18 @@ html, body {
   background: #f3f4f6;
 }
 
-.row-readonly td:not(:first-child):not(:nth-child(2)) input,
+/* Lock all fields EXCEPT Complaint */
+.row-readonly td:not(:first-child):not(:nth-child(2)) input:not([id^="complaint_"]),
 .row-readonly td:not(:first-child):not(:nth-child(2)) select {
   background: transparent;
   cursor: not-allowed;
+}
+
+/* Keep Complaint normal */
+.row-readonly input[id^="complaint_"] {
+  background: white !important;
+  cursor: text !important;
+  opacity: 1 !important;
 }
 
 #deputationTable tr.missing td {
