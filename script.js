@@ -1,7 +1,7 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbwNibttN_UDKbhMsva3n6qZkbVlx45svpO5BZ7xe9e39Q-qRSwN7rv4_0SCyNWASvdm2A/exec";
 
 const NON_DEPUTATION_WORK_TYPES = ["Free", "Leave", "Absent"];
-
+let currentBranchEngineers = [];
 
 /* ===============================
    GLOBAL LOADER CONTROL
@@ -60,9 +60,9 @@ function loadBranch(branch) {
   menuLabel.innerText = `Deputation >> ${branch} ▾`;
 
   jsonpRequest({ action: "getEngineers", location: branch }, (engineers = []) => {
-
+    currentBranchEngineers = engineers;
     renderEngineers(engineers);
-
+    
     jsonpRequest({ action: "getTodayData", location: branch }, (data = []) => {
 
       populateTodayData(data);
@@ -451,7 +451,12 @@ async function saveAll() {
 
     row.classList.remove("missing");
 
-    const engineer = row.getAttribute("data-engineer");
+    let engineer = row.getAttribute("data-engineer");
+   
+   if (!engineer) {
+     const engineerDropdown = row.querySelector("select[id^='engineer_']");
+     engineer = engineerDropdown ? engineerDropdown.value : "";
+   }
     const machineNo = document.getElementById(`machine_${index}`).value.trim();
     const workType = document.getElementById(`wo_${index}`).value;
     const isNonDeputationType = shouldLockRowByWorkType(workType);
@@ -629,3 +634,155 @@ function showManualCustomerPopup(index) {
     overlay.remove();
   });
 }
+
+
+
+function addAdditionalRow() {
+
+  const tbody = document.getElementById("tableBody");
+  const newIndex = document.querySelectorAll("#tableBody tr").length;
+
+  const row = document.createElement("tr");
+  row.classList.add("additional-row");
+
+  // Build engineer dropdown
+  let engineerOptions = `<option value=""></option>`;
+  currentBranchEngineers.forEach(name => {
+    engineerOptions += `<option value="${name}">${name}</option>`;
+  });
+
+  row.innerHTML = `
+    <td>
+      <select id="engineer_${newIndex}">
+        ${engineerOptions}
+      </select>
+      <button onclick="removeRow(this)" style="margin-left:4px;">🗑</button>
+    </td>
+
+    <td>
+      <select id="wo_${newIndex}">
+        <option value=""></option>
+        <option>Workshop</option>
+        <option>Onsite</option>
+        <option>Free</option>
+        <option>Leave</option>
+        <option>Absent</option>
+      </select>
+    </td>
+
+    <td><input id="machine_${newIndex}"></td>
+
+    <td>
+      <div class="customer-wrapper">
+        <input id="customer_${newIndex}">
+      </div>
+    </td>
+
+    <td>
+      <input id="contact_${newIndex}" type="tel" maxlength="10">
+    </td>
+
+    <td><input id="complaint_${newIndex}"></td>
+
+    <td>
+      <input id="hmr_${newIndex}" type="number" min="0" step="1">
+    </td>
+
+    <td>
+      <select id="call_${newIndex}">
+        <option value=""></option>
+        <option>U/W</option>
+        <option>B/W</option>
+        <option>P/T</option>
+        <option>P/W</option>
+        <option>JCB CARE</option>
+        <option>ASC</option>
+        <option>Goodwill</option>
+      </select>
+    </td>
+
+    <td>
+      <select id="ps_${newIndex}">
+        <option value=""></option>
+        <option>Primary</option>
+        <option>Secondary</option>
+      </select>
+    </td>
+
+    <td>
+      <select id="status_${newIndex}">
+        <option value=""></option>
+        <option>Running With Problem</option>
+        <option>Breakdown</option>
+        <option>PDI</option>
+        <option>Service</option>
+        <option>Installation</option>
+        <option>Visit</option>
+      </select>
+    </td>
+
+    <td><input id="location_${newIndex}"></td>
+
+    <td>
+      <input id="km_${newIndex}" type="number" min="0" step="1">
+    </td>
+
+    <td><input id="callid_${newIndex}"></td>
+
+    <td>
+      <input id="labour_${newIndex}" type="number" min="0" step="1">
+    </td>
+
+    <td><input id="total_${newIndex}" readonly></td>
+  `;
+
+  tbody.appendChild(row);
+
+  attachRowEvents(newIndex);
+}
+
+
+
+function attachRowEvents(index) {
+
+  const row = document.querySelectorAll("#tableBody tr")[index];
+
+  const woSelect = document.getElementById(`wo_${index}`);
+  const labourInput = document.getElementById(`labour_${index}`);
+  const kmInput = document.getElementById(`km_${index}`);
+  const contactInput = document.getElementById(`contact_${index}`);
+
+  if (contactInput) {
+    contactInput.addEventListener("input", function () {
+      this.value = this.value.replace(/\D/g, "").slice(0, 10);
+    });
+  }
+
+  if (woSelect) {
+    woSelect.addEventListener("change", () => {
+      applyRowLockState(row, index);
+      recalculateTADA();
+
+      const workType = woSelect.value;
+      const complaintInput = document.getElementById(`complaint_${index}`);
+
+      if (NON_DEPUTATION_WORK_TYPES.includes(workType)) {
+        setTimeout(() => complaintInput.focus(), 50);
+      }
+    });
+  }
+
+  if (labourInput) labourInput.addEventListener("input", recalculateTADA);
+  if (kmInput) kmInput.addEventListener("input", recalculateTADA);
+
+  applyRowLockState(row, index);
+}
+
+
+function removeRow(button) {
+  const row = button.closest("tr");
+  row.remove();
+  recalculateTADA();
+}
+
+
