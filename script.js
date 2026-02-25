@@ -457,6 +457,13 @@ async function saveAll() {
      const engineerDropdown = row.querySelector("select[id^='engineer_']");
      engineer = engineerDropdown ? engineerDropdown.value : "";
    }
+
+   // 🚨 Prevent saving additional row if engineer not selected
+   if (!engineer) {
+     skippedCount++;
+     row.classList.add("missing");
+     return;
+   }  
     const machineNo = document.getElementById(`machine_${index}`).value.trim();
     const workType = document.getElementById(`wo_${index}`).value;
     const isNonDeputationType = shouldLockRowByWorkType(workType);
