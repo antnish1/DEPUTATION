@@ -387,23 +387,21 @@ function applyRowLockState(row, index) {
 
     const isComplaintField = field.id === `complaint_${index}`;
 
-    // 🚨 Complaint should NEVER be disabled
     if (isComplaintField) {
+      // 🚀 Complaint ALWAYS editable
       field.disabled = false;
+      field.style.cursor = "text";
+      field.style.background = "white";
       return;
     }
 
     field.disabled = shouldLock;
   });
 
-  // If locking (Free / Leave / Absent)
   if (shouldLock) {
-
     allFields.forEach((field) => {
 
       const isComplaintField = field.id === `complaint_${index}`;
-
-      // 🚨 Do NOT clear Complaint
       if (isComplaintField) return;
 
       if (field.tagName === "INPUT") {
