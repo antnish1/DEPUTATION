@@ -469,7 +469,7 @@ async function saveAll() {
   // 🚨 FIX: Handle empty saves BEFORE waiting
   if (!savePromises.length) {
     hideLoader();  // ✅ IMPORTANT FIX
-    alert("No valid entries to save ❗");
+    showSummaryPopup(0, 0, skippedCount);
     saveBtn.disabled = false;
     saveBtn.innerText = "Save Changes";
     return;
