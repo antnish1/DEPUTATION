@@ -77,45 +77,38 @@ function loadBranch(branch) {
 ================================= */
 function populateTodayData(data) {
 
-  const baseTbody = document.getElementById("tableBody");
-  const additionalTbody = document.getElementById("additionalBody");
-  const additionalSection = document.getElementById("additionalSection");
-
-  const usedBaseRows = new Set();
+  const tbody = document.getElementById("tableBody");
+  const usedRows = new Set();
 
   data.forEach((entry) => {
 
-    const baseRows = [...baseTbody.querySelectorAll("tr")];
+    let rows = [...tbody.querySelectorAll("tr")];
 
-    // Try to find unused base row for this engineer
-    let targetRow = baseRows.find((row, index) => {
+    // Try to find unused base row
+    let targetRow = rows.find((row, index) => {
       const engineer = row.getAttribute("data-engineer");
-      return engineer === entry.engineerName && !usedBaseRows.has(index);
+      return engineer === entry.engineerName && !usedRows.has(index);
     });
 
     let rowIndex;
 
-    // ✅ CASE 1: Use base row
-    if (targetRow) {
+    // If no available base row, create additional row
+    if (!targetRow) {
+      addAdditionalRow();
+      rows = [...tbody.querySelectorAll("tr")];
+      rowIndex = rows.length - 1;
+      targetRow = rows[rowIndex];
 
-      rowIndex = baseRows.indexOf(targetRow);
-      usedBaseRows.add(rowIndex);
-
+      // Set engineer dropdown value
+      const engineerDropdown = targetRow.querySelector("select[id^='engineer_']");
+      if (engineerDropdown) {
+        engineerDropdown.value = entry.engineerName;
+      }
     } else {
-
-      // ✅ CASE 2: Create additional row
-      addAdditionalRow(entry.engineerName);
-
-      additionalSection.style.display = "block";
-
-      const additionalRows = [...additionalTbody.querySelectorAll("tr")];
-      const lastAdditionalRow = additionalRows[additionalRows.length - 1];
-
-      // Global index = base row count + additional row position
-      rowIndex = baseRows.length + additionalRows.length - 1;
-
-      targetRow = lastAdditionalRow;
+      rowIndex = rows.indexOf(targetRow);
     }
+
+    usedRows.add(rowIndex);
 
     // Fill data
     document.getElementById(`wo_${rowIndex}`).value = entry.workshopOnsite || "";
@@ -261,7 +254,7 @@ function renderEngineers(engineers) {
     tbody.appendChild(row);
   });
 
-  const rows = document.querySelectorAll("#tableBody tr, #additionalBody tr");
+  const rows = document.querySelectorAll("#tableBody tr");
 
   rows.forEach((row, index) => {
 
@@ -334,7 +327,7 @@ function toNumberOrZero(value) {
 
 function recalculateTADA() {
 
-  const rows = document.querySelectorAll("#tableBody tr, #additionalBody tr");
+  const rows = document.querySelectorAll("#tableBody tr");
 
   // Group rows by Machine No
   const machineGroups = {};
@@ -460,7 +453,7 @@ function applyRowLockState(row, index) {
 async function saveAll() {
 
   const saveBtn = document.getElementById("saveAllBtn");
-  const rows = document.querySelectorAll("#tableBody tr, #additionalBody tr");
+  const rows = document.querySelectorAll("#tableBody tr");
 
   if (!rows.length) {
     alert("No engineers loaded ❗");
@@ -673,25 +666,18 @@ function showManualCustomerPopup(index) {
 
 
 
-function addAdditionalRow(prefilledEngineer = "") {
+function addAdditionalRow() {
 
-  const tbody = document.getElementById("additionalBody");
-  const section = document.getElementById("additionalSection");
-
-  section.style.display = "block";
-
-  const newIndex =
-    document.querySelectorAll("#tableBody tr").length +
-    document.querySelectorAll("#additionalBody tr").length;
+  const tbody = document.getElementById("tableBody");
+  const newIndex = document.querySelectorAll("#tableBody tr").length;
 
   const row = document.createElement("tr");
   row.classList.add("additional-row");
 
+  // Build engineer dropdown
   let engineerOptions = `<option value=""></option>`;
   currentBranchEngineers.forEach(name => {
-    engineerOptions += `<option value="${name}" ${
-      name === prefilledEngineer ? "selected" : ""
-    }>${name}</option>`;
+    engineerOptions += `<option value="${name}">${name}</option>`;
   });
 
   row.innerHTML = `
@@ -699,7 +685,7 @@ function addAdditionalRow(prefilledEngineer = "") {
       <select id="engineer_${newIndex}">
         ${engineerOptions}
       </select>
-      <span class="delete-btn" onclick="removeAdditionalRow(this)">✖</span>
+      <button onclick="removeRow(this)" style="margin-left:4px;">🗑</button>
     </td>
 
     <td>
@@ -714,10 +700,23 @@ function addAdditionalRow(prefilledEngineer = "") {
     </td>
 
     <td><input id="machine_${newIndex}"></td>
-    <td><input id="customer_${newIndex}"></td>
-    <td><input id="contact_${newIndex}" maxlength="10"></td>
+
+    <td>
+      <div class="customer-wrapper">
+        <input id="customer_${newIndex}">
+      </div>
+    </td>
+
+    <td>
+      <input id="contact_${newIndex}" type="tel" maxlength="10">
+    </td>
+
     <td><input id="complaint_${newIndex}"></td>
-    <td><input id="hmr_${newIndex}" type="number"></td>
+
+    <td>
+      <input id="hmr_${newIndex}" type="number" min="0" step="1">
+    </td>
+
     <td>
       <select id="call_${newIndex}">
         <option value=""></option>
@@ -730,6 +729,7 @@ function addAdditionalRow(prefilledEngineer = "") {
         <option>Goodwill</option>
       </select>
     </td>
+
     <td>
       <select id="ps_${newIndex}">
         <option value=""></option>
@@ -737,6 +737,7 @@ function addAdditionalRow(prefilledEngineer = "") {
         <option>Secondary</option>
       </select>
     </td>
+
     <td>
       <select id="status_${newIndex}">
         <option value=""></option>
@@ -748,10 +749,19 @@ function addAdditionalRow(prefilledEngineer = "") {
         <option>Visit</option>
       </select>
     </td>
+
     <td><input id="location_${newIndex}"></td>
-    <td><input id="km_${newIndex}" type="number"></td>
+
+    <td>
+      <input id="km_${newIndex}" type="number" min="0" step="1">
+    </td>
+
     <td><input id="callid_${newIndex}"></td>
-    <td><input id="labour_${newIndex}" type="number"></td>
+
+    <td>
+      <input id="labour_${newIndex}" type="number" min="0" step="1">
+    </td>
+
     <td><input id="total_${newIndex}" readonly></td>
   `;
 
@@ -760,18 +770,16 @@ function addAdditionalRow(prefilledEngineer = "") {
   attachRowEvents(newIndex);
 }
 
+
+
 function attachRowEvents(index) {
 
-  const rows = document.querySelectorAll("#tableBody tr, #additionalBody tr");
-  const row = rows[index];
-
-  if (!row) return;
+  const row = document.querySelectorAll("#tableBody tr")[index];
 
   const woSelect = document.getElementById(`wo_${index}`);
   const labourInput = document.getElementById(`labour_${index}`);
   const kmInput = document.getElementById(`km_${index}`);
   const contactInput = document.getElementById(`contact_${index}`);
-  const machineInput = document.getElementById(`machine_${index}`);
 
   if (contactInput) {
     contactInput.addEventListener("input", function () {
@@ -787,7 +795,7 @@ function attachRowEvents(index) {
       const workType = woSelect.value;
       const complaintInput = document.getElementById(`complaint_${index}`);
 
-      if (NON_DEPUTATION_WORK_TYPES.includes(workType) && complaintInput) {
+      if (NON_DEPUTATION_WORK_TYPES.includes(workType)) {
         setTimeout(() => complaintInput.focus(), 50);
       }
     });
@@ -795,13 +803,6 @@ function attachRowEvents(index) {
 
   if (labourInput) labourInput.addEventListener("input", recalculateTADA);
   if (kmInput) kmInput.addEventListener("input", recalculateTADA);
-
-  if (machineInput) {
-    machineInput.addEventListener("blur", () => {
-      const machineNo = machineInput.value.trim();
-      fetchMachineDetails(machineNo, index);
-    });
-  }
 
   applyRowLockState(row, index);
 }
@@ -813,16 +814,3 @@ function removeRow(button) {
   recalculateTADA();
 }
 
-
-
-function removeAdditionalRow(element) {
-  const row = element.closest("tr");
-  row.remove();
-
-  const tbody = document.getElementById("additionalBody");
-  if (!tbody.children.length) {
-    document.getElementById("additionalSection").style.display = "none";
-  }
-
-  recalculateTADA();
-}
