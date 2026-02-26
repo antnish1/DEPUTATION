@@ -77,38 +77,45 @@ function loadBranch(branch) {
 ================================= */
 function populateTodayData(data) {
 
-  const tbody = document.getElementById("tableBody");
-  const usedRows = new Set();
+  const baseTbody = document.getElementById("tableBody");
+  const additionalTbody = document.getElementById("additionalBody");
+  const additionalSection = document.getElementById("additionalSection");
+
+  const usedBaseRows = new Set();
 
   data.forEach((entry) => {
 
-    let rows = [...tbody.querySelectorAll("tr")];
+    const baseRows = [...baseTbody.querySelectorAll("tr")];
 
-    // Try to find unused base row
-    let targetRow = rows.find((row, index) => {
+    // Try to find unused base row for this engineer
+    let targetRow = baseRows.find((row, index) => {
       const engineer = row.getAttribute("data-engineer");
-      return engineer === entry.engineerName && !usedRows.has(index);
+      return engineer === entry.engineerName && !usedBaseRows.has(index);
     });
 
     let rowIndex;
 
-    // If no available base row, create additional row
-    if (!targetRow) {
-      addAdditionalRow();
-      rows = [...tbody.querySelectorAll("tr")];
-      rowIndex = rows.length - 1;
-      targetRow = rows[rowIndex];
+    // ✅ CASE 1: Use base row
+    if (targetRow) {
 
-      // Set engineer dropdown value
-      const engineerDropdown = targetRow.querySelector("select[id^='engineer_']");
-      if (engineerDropdown) {
-        engineerDropdown.value = entry.engineerName;
-      }
+      rowIndex = baseRows.indexOf(targetRow);
+      usedBaseRows.add(rowIndex);
+
     } else {
-      rowIndex = rows.indexOf(targetRow);
-    }
 
-    usedRows.add(rowIndex);
+      // ✅ CASE 2: Create additional row
+      addAdditionalRow(entry.engineerName);
+
+      additionalSection.style.display = "block";
+
+      const additionalRows = [...additionalTbody.querySelectorAll("tr")];
+      const lastAdditionalRow = additionalRows[additionalRows.length - 1];
+
+      // Global index = base row count + additional row position
+      rowIndex = baseRows.length + additionalRows.length - 1;
+
+      targetRow = lastAdditionalRow;
+    }
 
     // Fill data
     document.getElementById(`wo_${rowIndex}`).value = entry.workshopOnsite || "";
@@ -666,20 +673,25 @@ function showManualCustomerPopup(index) {
 
 
 
-function addAdditionalRow() {
+function addAdditionalRow(prefilledEngineer = "") {
 
-  const tbody = document.getElementById("tableBody");
+  const tbody = document.getElementById("additionalBody");
+  const section = document.getElementById("additionalSection");
 
-  // Get total rows (base + additional)
-  const newIndex = document.querySelectorAll("#tableBody tr").length;
+  section.style.display = "block";
+
+  const newIndex =
+    document.querySelectorAll("#tableBody tr").length +
+    document.querySelectorAll("#additionalBody tr").length;
 
   const row = document.createElement("tr");
   row.classList.add("additional-row");
 
-  // Build engineer dropdown
   let engineerOptions = `<option value=""></option>`;
   currentBranchEngineers.forEach(name => {
-    engineerOptions += `<option value="${name}">${name}</option>`;
+    engineerOptions += `<option value="${name}" ${
+      name === prefilledEngineer ? "selected" : ""
+    }>${name}</option>`;
   });
 
   row.innerHTML = `
@@ -687,10 +699,7 @@ function addAdditionalRow() {
       <select id="engineer_${newIndex}">
         ${engineerOptions}
       </select>
-      <span class="delete-btn" onclick="removeAdditionalRow(this)" 
-            style="margin-left:6px; cursor:pointer; color:#d63031; font-weight:bold;">
-        ✖
-      </span>
+      <span class="delete-btn" onclick="removeAdditionalRow(this)">✖</span>
     </td>
 
     <td>
@@ -705,27 +714,10 @@ function addAdditionalRow() {
     </td>
 
     <td><input id="machine_${newIndex}"></td>
-
-    <td>
-      <div class="customer-wrapper">
-        <input id="customer_${newIndex}">
-        <div class="customer-spinner hidden" id="customerLoader_${newIndex}"></div>
-      </div>
-    </td>
-
-    <td>
-      <input id="contact_${newIndex}" 
-             type="tel" 
-             inputmode="numeric"
-             maxlength="10">
-    </td>
-
+    <td><input id="customer_${newIndex}"></td>
+    <td><input id="contact_${newIndex}" maxlength="10"></td>
     <td><input id="complaint_${newIndex}"></td>
-
-    <td>
-      <input id="hmr_${newIndex}" type="number" min="0" step="1">
-    </td>
-
+    <td><input id="hmr_${newIndex}" type="number"></td>
     <td>
       <select id="call_${newIndex}">
         <option value=""></option>
@@ -738,7 +730,6 @@ function addAdditionalRow() {
         <option>Goodwill</option>
       </select>
     </td>
-
     <td>
       <select id="ps_${newIndex}">
         <option value=""></option>
@@ -746,7 +737,6 @@ function addAdditionalRow() {
         <option>Secondary</option>
       </select>
     </td>
-
     <td>
       <select id="status_${newIndex}">
         <option value=""></option>
@@ -758,31 +748,17 @@ function addAdditionalRow() {
         <option>Visit</option>
       </select>
     </td>
-
     <td><input id="location_${newIndex}"></td>
-
-    <td>
-      <input id="km_${newIndex}" type="number" min="0" step="1">
-    </td>
-
+    <td><input id="km_${newIndex}" type="number"></td>
     <td><input id="callid_${newIndex}"></td>
-
-    <td>
-      <input id="labour_${newIndex}" type="number" min="0" step="1">
-    </td>
-
+    <td><input id="labour_${newIndex}" type="number"></td>
     <td><input id="total_${newIndex}" readonly></td>
   `;
 
   tbody.appendChild(row);
 
-  // Attach events (VERY IMPORTANT)
   attachRowEvents(newIndex);
-
-  // Scroll to new row smoothly
-  row.scrollIntoView({ behavior: "smooth", block: "center" });
 }
-
 
 function attachRowEvents(index) {
 
