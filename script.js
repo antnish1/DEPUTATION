@@ -762,12 +762,16 @@ function addAdditionalRow(prefilledEngineer = "") {
 
 function attachRowEvents(index) {
 
-  const row = document.querySelectorAll("#tableBody tr")[index];
+  const rows = document.querySelectorAll("#tableBody tr, #additionalBody tr");
+  const row = rows[index];
+
+  if (!row) return;
 
   const woSelect = document.getElementById(`wo_${index}`);
   const labourInput = document.getElementById(`labour_${index}`);
   const kmInput = document.getElementById(`km_${index}`);
   const contactInput = document.getElementById(`contact_${index}`);
+  const machineInput = document.getElementById(`machine_${index}`);
 
   if (contactInput) {
     contactInput.addEventListener("input", function () {
@@ -783,7 +787,7 @@ function attachRowEvents(index) {
       const workType = woSelect.value;
       const complaintInput = document.getElementById(`complaint_${index}`);
 
-      if (NON_DEPUTATION_WORK_TYPES.includes(workType)) {
+      if (NON_DEPUTATION_WORK_TYPES.includes(workType) && complaintInput) {
         setTimeout(() => complaintInput.focus(), 50);
       }
     });
@@ -791,6 +795,13 @@ function attachRowEvents(index) {
 
   if (labourInput) labourInput.addEventListener("input", recalculateTADA);
   if (kmInput) kmInput.addEventListener("input", recalculateTADA);
+
+  if (machineInput) {
+    machineInput.addEventListener("blur", () => {
+      const machineNo = machineInput.value.trim();
+      fetchMachineDetails(machineNo, index);
+    });
+  }
 
   applyRowLockState(row, index);
 }
