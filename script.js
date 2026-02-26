@@ -254,7 +254,7 @@ function renderEngineers(engineers) {
     tbody.appendChild(row);
   });
 
-  const rows = document.querySelectorAll("#tableBody tr");
+  const rows = document.querySelectorAll("#tableBody tr, #additionalBody tr");
 
   rows.forEach((row, index) => {
 
@@ -327,7 +327,7 @@ function toNumberOrZero(value) {
 
 function recalculateTADA() {
 
-  const rows = document.querySelectorAll("#tableBody tr");
+  const rows = document.querySelectorAll("#tableBody tr, #additionalBody tr");
 
   // Group rows by Machine No
   const machineGroups = {};
@@ -453,7 +453,7 @@ function applyRowLockState(row, index) {
 async function saveAll() {
 
   const saveBtn = document.getElementById("saveAllBtn");
-  const rows = document.querySelectorAll("#tableBody tr");
+  const rows = document.querySelectorAll("#tableBody tr, #additionalBody tr");
 
   if (!rows.length) {
     alert("No engineers loaded ❗");
@@ -669,6 +669,8 @@ function showManualCustomerPopup(index) {
 function addAdditionalRow() {
 
   const tbody = document.getElementById("tableBody");
+
+  // Get total rows (base + additional)
   const newIndex = document.querySelectorAll("#tableBody tr").length;
 
   const row = document.createElement("tr");
@@ -685,7 +687,10 @@ function addAdditionalRow() {
       <select id="engineer_${newIndex}">
         ${engineerOptions}
       </select>
-      <button onclick="removeRow(this)" style="margin-left:4px;">🗑</button>
+      <span class="delete-btn" onclick="removeAdditionalRow(this)" 
+            style="margin-left:6px; cursor:pointer; color:#d63031; font-weight:bold;">
+        ✖
+      </span>
     </td>
 
     <td>
@@ -704,11 +709,15 @@ function addAdditionalRow() {
     <td>
       <div class="customer-wrapper">
         <input id="customer_${newIndex}">
+        <div class="customer-spinner hidden" id="customerLoader_${newIndex}"></div>
       </div>
     </td>
 
     <td>
-      <input id="contact_${newIndex}" type="tel" maxlength="10">
+      <input id="contact_${newIndex}" 
+             type="tel" 
+             inputmode="numeric"
+             maxlength="10">
     </td>
 
     <td><input id="complaint_${newIndex}"></td>
@@ -767,9 +776,12 @@ function addAdditionalRow() {
 
   tbody.appendChild(row);
 
+  // Attach events (VERY IMPORTANT)
   attachRowEvents(newIndex);
-}
 
+  // Scroll to new row smoothly
+  row.scrollIntoView({ behavior: "smooth", block: "center" });
+}
 
 
 function attachRowEvents(index) {
@@ -815,3 +827,15 @@ function removeRow(button) {
 }
 
 
+
+function removeAdditionalRow(element) {
+  const row = element.closest("tr");
+  row.remove();
+
+  const tbody = document.getElementById("additionalBody");
+  if (!tbody.children.length) {
+    document.getElementById("additionalSection").style.display = "none";
+  }
+
+  recalculateTADA();
+}
