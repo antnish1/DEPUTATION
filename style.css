@@ -502,25 +502,3 @@ html, body {
   color: #d63031;
   font-weight: bold;
 }
-
-
-#additionalTable th {
-  background: #374151;
-  color: white;
-}
-
-#additionalSection h3 {
-  color: #1e293b;
-  font-weight: 600;
-}
-
-.delete-btn {
-  cursor: pointer;
-  color: #d63031;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.delete-btn:hover {
-  transform: scale(1.2);
-}
