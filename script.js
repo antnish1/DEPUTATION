@@ -911,6 +911,142 @@ function forceSave() {
   saveAll();
 }
 
+
+/* ===============================
+   FINALIZE & PRINT REPORT
+================================= */
+
+function finalizeAndPrint() {
+
+  const branch = document.getElementById("branchHiddenTitle").innerText;
+  const today = new Date().toLocaleDateString();
+  const printTime = new Date().toLocaleString();
+
+  const rows = document.querySelectorAll("#tableBody tr");
+
+  let onsite = 0, workshop = 0, absent = 0, leave = 0, free = 0;
+
+  let tableRows = "";
+
+  rows.forEach((row, index) => {
+
+    const engineer =
+      row.getAttribute("data-engineer") ||
+      (document.getElementById(`engineer_${index}`)?.value || "");
+
+    const wo = document.getElementById(`wo_${index}`).value;
+
+    if (!engineer || !wo) return;
+
+    if (wo === "Onsite") onsite++;
+    if (wo === "Workshop") workshop++;
+    if (wo === "Absent") absent++;
+    if (wo === "Leave") leave++;
+    if (wo === "Free") free++;
+
+    tableRows += `
+      <tr>
+        <td>${engineer}</td>
+        <td>${wo}</td>
+        <td>${document.getElementById(`machine_${index}`).value}</td>
+        <td>${document.getElementById(`customer_${index}`).value}</td>
+        <td>${document.getElementById(`contact_${index}`).value}</td>
+        <td>${document.getElementById(`complaint_${index}`).value}</td>
+        <td>${document.getElementById(`hmr_${index}`).value}</td>
+        <td>${document.getElementById(`call_${index}`).value}</td>
+        <td>${document.getElementById(`ps_${index}`).value}</td>
+        <td>${document.getElementById(`status_${index}`).value}</td>
+        <td>${document.getElementById(`location_${index}`).value}</td>
+        <td>${document.getElementById(`callid_${index}`).value}</td>
+        <td>${document.getElementById(`labour_${index}`).value}</td>
+        <td>${document.getElementById(`total_${index}`).value}</td>
+      </tr>
+    `;
+  });
+
+  const printWindow = window.open("", "_blank");
+
+  printWindow.document.write(`
+    <html>
+    <head>
+      <title>Deputation Report</title>
+      <style>
+        @page { size: A4 landscape; margin: 20mm; }
+        body { font-family: Arial; font-size: 12px; }
+        h2 { text-align: center; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #000; padding: 4px; text-align: center; }
+        th { background: #f0f0f0; }
+        .footer {
+          margin-top: 20px;
+          display: flex;
+          justify-content: space-between;
+        }
+        .summary {
+          font-size: 13px;
+        }
+      </style>
+    </head>
+    <body>
+
+      <h2>
+        SERVICE ENGINEER DEPUTATION CHART & DAILY REPORT FOR ${branch}  
+        <br>
+        DATE: ${today}
+      </h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Engineer</th>
+            <th>W/O</th>
+            <th>Machine No</th>
+            <th>Customer</th>
+            <th>Contact No</th>
+            <th>Complaint</th>
+            <th>HMR</th>
+            <th>Call Type</th>
+            <th>P/S</th>
+            <th>Status</th>
+            <th>M/C Location</th>
+            <th>Call ID</th>
+            <th>Labour</th>
+            <th>TA DA</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tableRows}
+        </tbody>
+      </table>
+
+      <div class="footer">
+        <div class="summary">
+          <strong>Deputation Summary</strong><br>
+          Onsite: ${onsite}<br>
+          Workshop: ${workshop}<br>
+          Absent: ${absent}<br>
+          Leave: ${leave}<br>
+          Free: ${free}
+        </div>
+
+        <div>
+          <strong>Report Print Date & Time:</strong><br>
+          ${printTime}
+        </div>
+      </div>
+
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+}
+
+
+
+
 window.addEventListener("beforeunload", function (e) {
   if (hasUnsavedChanges) {
     e.preventDefault();
