@@ -126,9 +126,17 @@ function populateTodayData(data) {
     document.getElementById(`km_${rowIndex}`).value = entry.siteDistance || "";
 
     applyRowLockState(targetRow, rowIndex);
+     updateRowColor(targetRow, rowIndex);
   });
 
   recalculateTADA();
+
+   // Re-apply row colors for all rows after load
+   const rows = document.querySelectorAll("#tableBody tr");
+   rows.forEach((row, index) => {
+     updateRowColor(row, index);
+   });
+   
 }
 
 /* ===============================
