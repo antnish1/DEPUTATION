@@ -972,7 +972,7 @@ function finalizeAndPrint() {
       <title>Deputation Report</title>
       <style>
         @page { size: A4 landscape; margin: 20mm; }
-        body { font-family: Arial; font-size: 12px; }
+        body { font-family: Arial; font-size: 9px; }
         h2 { text-align: center; margin-bottom: 15px; }
         table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #000; padding: 4px; text-align: center; }
