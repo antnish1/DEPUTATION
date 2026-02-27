@@ -658,3 +658,30 @@ html, body {
   from { transform: scale(0.95); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+
+
+
+/* =========================
+   FLOATING PRINT BUTTON
+========================= */
+
+.floating-print-btn {
+  position: fixed;
+  bottom: 25px;
+  right: 200px;
+  background: #1e293b;
+  color: white;
+  border: none;
+  padding: 14px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  z-index: 1000;
+  transition: all 0.2s ease;
+}
+
+.floating-print-btn:hover {
+  background: #0f172a;
+}
