@@ -502,3 +502,32 @@ html, body {
   color: #d63031;
   font-weight: bold;
 }
+
+/* Fix additional row alignment */
+.additional-row td {
+  padding: 6px;
+  text-align: center;
+}
+
+.additional-row select,
+.additional-row input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fix engineer dropdown + delete button layout */
+.additional-row td:first-child {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.additional-row td:first-child select {
+  flex: 1;
+}
+
+.additional-row td:first-child button {
+  flex-shrink: 0;
+  padding: 2px 6px;
+}
+
