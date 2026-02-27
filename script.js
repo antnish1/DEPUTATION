@@ -814,3 +814,29 @@ function removeRow(button) {
   recalculateTADA();
 }
 
+
+/* ===============================
+   AUTO HIDE SAVE BUTTON ON SCROLL UP
+================================= */
+
+let lastScrollTop = 0;
+
+window.addEventListener("scroll", function () {
+
+  const saveBtn = document.getElementById("saveAllBtn");
+  if (!saveBtn) return;
+
+  const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+  // If scrolling down → show button
+  if (currentScroll > lastScrollTop) {
+    saveBtn.classList.remove("hide-on-scroll");
+  } 
+  // If scrolling up → hide button
+  else {
+    saveBtn.classList.add("hide-on-scroll");
+  }
+
+  lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+
+});
