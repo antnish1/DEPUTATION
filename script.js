@@ -939,7 +939,7 @@ function finalizeAndPrint() {
         finalizedBranches[branch] = true;
       }
    
-  const branch = document.getElementById("branchHiddenTitle").innerText;
+ 
   const today = new Date().toLocaleDateString();
   const printTime = new Date().toLocaleString();
 
