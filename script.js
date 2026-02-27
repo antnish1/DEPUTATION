@@ -944,6 +944,10 @@ function finalizeAndPrint() {
       if (!finalizedBranches[branch]) {
         lockDeputationTable();
         finalizedBranches[branch] = true;
+
+        localStorage.setItem("finalizedBranches", JSON.stringify(finalizedBranches));
+
+         
       }
    
  
