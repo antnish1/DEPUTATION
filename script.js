@@ -3,7 +3,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbwNibttN_UDKbhMsva3n6qZ
 const NON_DEPUTATION_WORK_TYPES = ["Free", "Leave", "Absent"];
 let currentBranchEngineers = [];
 let hasUnsavedChanges = false;
-let isFinalized = false;
+let finalizedBranches = {};   
 /* ===============================
    GLOBAL LOADER CONTROL
 ================================= */
@@ -54,7 +54,7 @@ function loadBranch(branch) {
      return;
    }
 
-   isFinalized = false;
+   
 
    
   showLoader("Loading branch data...");
@@ -693,7 +693,10 @@ function showManualCustomerPopup(index) {
 function addAdditionalRow() {
 
 
-   if (isFinalized) {
+   const branch = document.getElementById("branchHiddenTitle").innerText;
+
+   if (finalizedBranches[branch]) {
+      
      alert("This branch report has been finalized. Editing is locked.");
      return;
    }
@@ -929,10 +932,12 @@ function forceSave() {
 function finalizeAndPrint() {
 
 
-   if (!isFinalized) {
-     lockDeputationTable();
-     isFinalized = true;
-   }
+   const branch = document.getElementById("branchHiddenTitle").innerText;
+
+      if (!finalizedBranches[branch]) {
+        lockDeputationTable();
+        finalizedBranches[branch] = true;
+      }
    
   const branch = document.getElementById("branchHiddenTitle").innerText;
   const today = new Date().toLocaleDateString();
