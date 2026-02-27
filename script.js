@@ -48,6 +48,11 @@ function jsonpRequest(params, callback) {
 ================================= */
 function loadBranch(branch) {
 
+   if (hasUnsavedChanges) {
+     showUnsavedPopup();
+     return;
+   }
+
   showLoader("Loading branch data...");
   document.getElementById("saveAllBtn").disabled = false;
   // Show hidden content
@@ -583,6 +588,7 @@ async function saveAll() {
     });
 
     showSummaryPopup(successCount, duplicateCount, skippedCount);
+     hasUnsavedChanges = false;
 
   } catch (error) {
     console.error("Save error:", error);
