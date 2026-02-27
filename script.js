@@ -2,7 +2,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbwNibttN_UDKbhMsva3n6qZ
 
 const NON_DEPUTATION_WORK_TYPES = ["Free", "Leave", "Absent"];
 let currentBranchEngineers = [];
-
+let hasUnsavedChanges = false;
 /* ===============================
    GLOBAL LOADER CONTROL
 ================================= */
@@ -279,10 +279,12 @@ function renderEngineers(engineers) {
 
     // W/O change
     woSelect.addEventListener("change", () => {
+      
+        hasUnsavedChanges = true;
         applyRowLockState(row, index);
         updateRowColor(row, index);
         recalculateTADA();
-       updateRowColor(row, index);
+        updateRowColor(row, index);
       
         const workType = woSelect.value;
         const complaintInput = document.getElementById(`complaint_${index}`);
@@ -801,7 +803,9 @@ function attachRowEvents(index) {
 
   if (woSelect) {
     woSelect.addEventListener("change", () => {
-      applyRowLockState(row, index);
+
+       hasUnsavedChanges = true;
+       applyRowLockState(row, index);
        updateRowColor(row, index);
       recalculateTADA();
        updateRowColor(row, index);
