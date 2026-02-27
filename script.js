@@ -274,6 +274,7 @@ function renderEngineers(engineers) {
         applyRowLockState(row, index);
         updateRowColor(row, index);
         recalculateTADA();
+       updateRowColor(row, index);
       
         const workType = woSelect.value;
         const complaintInput = document.getElementById(`complaint_${index}`);
@@ -295,6 +296,7 @@ function renderEngineers(engineers) {
     // Machine No change
     machineInput.addEventListener("input", () => {
      recalculateTADA();
+       updateRowColor(row, index);
 
        machineInput.addEventListener("blur", () => {
         const machineNo = machineInput.value.trim();
@@ -794,6 +796,7 @@ function attachRowEvents(index) {
       applyRowLockState(row, index);
        updateRowColor(row, index);
       recalculateTADA();
+       updateRowColor(row, index);
 
       const workType = woSelect.value;
       const complaintInput = document.getElementById(`complaint_${index}`);
