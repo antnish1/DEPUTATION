@@ -896,3 +896,18 @@ function updateRowColor(row, index) {
     row.classList.add("row-complete");
   }
 }
+
+
+function showUnsavedPopup() {
+  document.getElementById("unsavedPopup").classList.remove("hidden");
+}
+
+function closeUnsavedPopup() {
+  document.getElementById("unsavedPopup").classList.add("hidden");
+}
+
+function forceSave() {
+  closeUnsavedPopup();
+  saveAll();
+}
+
