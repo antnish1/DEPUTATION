@@ -956,10 +956,10 @@ function finalizeAndPrint() {
         <td>${document.getElementById(`call_${index}`).value}</td>
         <td>${document.getElementById(`ps_${index}`).value}</td>
         <td>${document.getElementById(`status_${index}`).value}</td>
-        <td>${document.getElementById(`location_${index}`).value}</td>
+        
         <td>${document.getElementById(`callid_${index}`).value}</td>
         <td>${document.getElementById(`labour_${index}`).value}</td>
-        <td>${document.getElementById(`total_${index}`).value}</td>
+       
       </tr>
     `;
   });
@@ -1033,10 +1033,10 @@ function finalizeAndPrint() {
             <th>Call Type</th>
             <th>P/S</th>
             <th>Status</th>
-            <th>M/C Location</th>
+            
             <th>Call ID</th>
             <th>Labour</th>
-            <th>TA DA</th>
+            
           </tr>
         </thead>
         <tbody>
