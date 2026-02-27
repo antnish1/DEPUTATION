@@ -1046,13 +1046,13 @@ function finalizeAndPrint() {
 
       <div class="footer">
         <div class="summary">
-          <strong>Deputation Summary</strong><br>
-          Onsite: ${onsite}<br>
-          Workshop: ${workshop}<br>
-          Absent: ${absent}<br>
-          Leave: ${leave}<br>
-          Free: ${free}
-        </div>
+           <strong>Deputation Summary:</strong>
+           Onsite: ${onsite} |
+           Workshop: ${workshop} |
+           Absent: ${absent} |
+           Leave: ${leave} |
+           Free: ${free}
+         </div>
 
         <div>
           <strong>Report Print Date & Time:</strong><br>
