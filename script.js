@@ -3,7 +3,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbwNibttN_UDKbhMsva3n6qZ
 const NON_DEPUTATION_WORK_TYPES = ["Free", "Leave", "Absent"];
 let currentBranchEngineers = [];
 let hasUnsavedChanges = false;
-let finalizedBranches = {};   
+let finalizedBranches = JSON.parse(localStorage.getItem("finalizedBranches")) || {};
 /* ===============================
    GLOBAL LOADER CONTROL
 ================================= */
@@ -71,6 +71,13 @@ function loadBranch(branch) {
   jsonpRequest({ action: "getEngineers", location: branch }, (engineers = []) => {
     currentBranchEngineers = engineers;
     renderEngineers(engineers);
+
+     // After rendering rows, check finalize state
+      if (finalizedBranches[branch]) {
+        lockDeputationTable();
+      } else {
+        unlockDeputationTable();
+      }
     
     jsonpRequest({ action: "getTodayData", location: branch }, (data = []) => {
 
@@ -1130,6 +1137,42 @@ function lockDeputationTable() {
 
   // Prevent further edits flag
   hasUnsavedChanges = false;
+}
+
+
+/* ===============================
+   UNLOCK TABLE
+================================= */
+
+function unlockDeputationTable() {
+
+  const rows = document.querySelectorAll("#tableBody tr");
+
+  rows.forEach((row) => {
+    const inputs = row.querySelectorAll("input, select");
+
+    inputs.forEach((field) => {
+      field.disabled = false;
+    });
+
+    row.style.opacity = "1";
+  });
+
+  // Enable Save button
+  const saveBtn = document.getElementById("saveAllBtn");
+  if (saveBtn) {
+    saveBtn.disabled = false;
+    saveBtn.innerText = "Save Changes";
+    saveBtn.style.background = "";
+  }
+
+  // Enable Add Row button
+  const addBtn = document.getElementById("addRowBtn");
+  if (addBtn) {
+    addBtn.disabled = false;
+    addBtn.style.opacity = "1";
+    addBtn.style.cursor = "pointer";
+  }
 }
 
 
