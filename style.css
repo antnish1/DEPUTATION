@@ -579,3 +579,18 @@ html, body {
 .floating-save-btn {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
+
+
+/* =========================
+   ROW STATUS COLORS
+========================= */
+
+/* Leave / Absent / Free */
+.row-nondeputation td {
+  background: #ffe6ef !important;  /* Light Pink */
+}
+
+/* Completed Row */
+.row-complete td {
+  background: #e6f7ec !important;  /* Light Green */
+}
