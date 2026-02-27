@@ -272,6 +272,7 @@ function renderEngineers(engineers) {
     // W/O change
     woSelect.addEventListener("change", () => {
         applyRowLockState(row, index);
+        updateRowColor(row, index);
         recalculateTADA();
       
         const workType = woSelect.value;
@@ -310,6 +311,7 @@ function renderEngineers(engineers) {
 
     // Initial row setup
     applyRowLockState(row, index);
+    updateRowColor(row, index);
   });
 
   // After all rows are initialized, calculate once
@@ -790,6 +792,7 @@ function attachRowEvents(index) {
   if (woSelect) {
     woSelect.addEventListener("change", () => {
       applyRowLockState(row, index);
+       updateRowColor(row, index);
       recalculateTADA();
 
       const workType = woSelect.value;
@@ -805,6 +808,7 @@ function attachRowEvents(index) {
   if (kmInput) kmInput.addEventListener("input", recalculateTADA);
 
   applyRowLockState(row, index);
+   updateRowColor(row, index);
 }
 
 
@@ -840,3 +844,34 @@ window.addEventListener("scroll", function () {
   lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
 
 });
+
+
+
+
+
+
+/* ===============================
+   UPDATE ROW COLOR STATUS
+================================= */
+
+function updateRowColor(row, index) {
+
+  const wo = document.getElementById(`wo_${index}`).value;
+  const machine = document.getElementById(`machine_${index}`).value.trim();
+  const complaint = document.getElementById(`complaint_${index}`).value.trim();
+
+  // Reset classes first
+  row.classList.remove("row-nondeputation");
+  row.classList.remove("row-complete");
+
+  // 1️⃣ Non-deputation types → Pink
+  if (NON_DEPUTATION_WORK_TYPES.includes(wo)) {
+    row.classList.add("row-nondeputation");
+    return;
+  }
+
+  // 2️⃣ Mandatory fields check (Machine + Complaint)
+  if (machine && complaint) {
+    row.classList.add("row-complete");
+  }
+}
