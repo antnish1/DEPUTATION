@@ -971,19 +971,44 @@ function finalizeAndPrint() {
     <head>
       <title>Deputation Report</title>
       <style>
-        @page { size: A4 landscape; margin: 20mm; }
-        body { font-family: Arial; font-size: 9px; }
-        h2 { text-align: center; margin-bottom: 15px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #000; padding: 4px; text-align: center; }
-        th { background: #f0f0f0; }
+        @page { size: A4 landscape; margin: 12mm; }
+      
+        body { 
+          font-family: Arial; 
+          font-size: 9px; 
+        }
+      
+        h2 { 
+          text-align: center; 
+          margin-bottom: 10px; 
+          font-size: 13px;
+        }
+      
+        table { 
+          width: 100%; 
+          border-collapse: collapse; 
+        }
+      
+        th, td { 
+          border: 1px solid #000; 
+          padding: 3px; 
+          text-align: center; 
+          font-size: 8.5px;
+        }
+      
+        th { 
+          background: #f0f0f0; 
+          font-weight: bold;
+        }
+      
         .footer {
-          margin-top: 20px;
+          margin-top: 15px;
           display: flex;
           justify-content: space-between;
         }
+      
         .summary {
-          font-size: 13px;
+          font-size: 9px;
         }
       </style>
     </head>
