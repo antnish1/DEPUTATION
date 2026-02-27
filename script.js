@@ -685,7 +685,7 @@ function addAdditionalRow() {
       <select id="engineer_${newIndex}">
         ${engineerOptions}
       </select>
-      <button onclick="removeRow(this)" style="margin-left:4px;">🗑</button>
+      <button onclick="removeRow(this)" class="delete-btn">🗑</button>
     </td>
 
     <td>
