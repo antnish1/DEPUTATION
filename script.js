@@ -1008,8 +1008,9 @@ function finalizeAndPrint() {
         }
       
         .summary {
-          font-size: 9px;
-        }
+           font-size: 8.5px;
+           font-weight: 600;
+         }
       </style>
     </head>
     <body>
