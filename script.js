@@ -49,44 +49,53 @@ function jsonpRequest(params, callback) {
 ================================= */
 function loadBranch(branch) {
 
-   if (hasUnsavedChanges) {
-     showUnsavedPopup();
-     return;
-   }
+  if (hasUnsavedChanges) {
+    showUnsavedPopup();
+    return;
+  }
 
-   
+  showLoader("Checking branch status...");
 
-   
-  showLoader("Loading branch data...");
-  document.getElementById("saveAllBtn").disabled = false;
-  // Show hidden content
-  document.getElementById("branchContent").style.display = "block";
-  
+  // 🔒 Check from server if branch is finalized
+  jsonpRequest(
+    { action: "isFinalized", location: branch },
+    (response) => {
 
-  document.getElementById("branchHiddenTitle").innerText = branch;
+      const isLocked = response.finalized === true;
 
-  const menuLabel = document.getElementById("deputationMenuLabel");
-  menuLabel.innerText = `Deputation >> ${branch} ▾`;
+      document.getElementById("branchContent").style.display = "block";
+      document.getElementById("branchHiddenTitle").innerText = branch;
 
-  jsonpRequest({ action: "getEngineers", location: branch }, (engineers = []) => {
-    currentBranchEngineers = engineers;
-    renderEngineers(engineers);
+      const menuLabel = document.getElementById("deputationMenuLabel");
+      menuLabel.innerText = `Deputation >> ${branch} ▾`;
 
-     // After rendering rows, check finalize state
-      if (finalizedBranches[branch]) {
-        lockDeputationTable();
-      } else {
-        unlockDeputationTable();
-      }
-    
-    jsonpRequest({ action: "getTodayData", location: branch }, (data = []) => {
+      // Now load engineers
+      jsonpRequest(
+        { action: "getEngineers", location: branch },
+        (engineers = []) => {
 
-      populateTodayData(data);
+          currentBranchEngineers = engineers;
+          renderEngineers(engineers);
 
-      hideLoader();
-    });
+          jsonpRequest(
+            { action: "getTodayData", location: branch },
+            (data = []) => {
 
-  });
+              populateTodayData(data);
+
+              if (isLocked) {
+                lockDeputationTable();
+              } else {
+                unlockDeputationTable();
+              }
+
+              hideLoader();
+            }
+          );
+        }
+      );
+    }
+  );
 }
 /* ===============================
    LOAD TODAY DATA
@@ -938,168 +947,35 @@ function forceSave() {
 
 function finalizeAndPrint() {
 
+  const branch = document.getElementById("branchHiddenTitle").innerText;
 
-   const branch = document.getElementById("branchHiddenTitle").innerText;
+  showLoader("Finalizing branch...");
 
-      if (!finalizedBranches[branch]) {
-        lockDeputationTable();
-        finalizedBranches[branch] = true;
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "finalizeBranch",
+      branch: branch
+    })
+  })
+  .then(res => res.json())
+  .then(response => {
 
-        localStorage.setItem("finalizedBranches", JSON.stringify(finalizedBranches));
+    if (response.status === "success") {
 
-         
-      }
-   
- 
-  const today = new Date().toLocaleDateString();
-  const printTime = new Date().toLocaleString();
+      lockDeputationTable();
 
-  const rows = document.querySelectorAll("#tableBody tr");
+      hideLoader();
 
-  let onsite = 0, workshop = 0, absent = 0, leave = 0, free = 0;
+      // Now print
+      printReport();
+    }
 
-  let tableRows = "";
-
-  rows.forEach((row, index) => {
-
-    const engineer =
-      row.getAttribute("data-engineer") ||
-      (document.getElementById(`engineer_${index}`)?.value || "");
-
-    const wo = document.getElementById(`wo_${index}`).value;
-
-    if (!engineer || !wo) return;
-
-    if (wo === "Onsite") onsite++;
-    if (wo === "Workshop") workshop++;
-    if (wo === "Absent") absent++;
-    if (wo === "Leave") leave++;
-    if (wo === "Free") free++;
-
-    tableRows += `
-      <tr>
-        <td>${engineer}</td>
-        <td>${wo}</td>
-        <td>${document.getElementById(`machine_${index}`).value}</td>
-        <td>${document.getElementById(`customer_${index}`).value}</td>
-        <td>${document.getElementById(`contact_${index}`).value}</td>
-        <td>${document.getElementById(`complaint_${index}`).value}</td>
-        <td>${document.getElementById(`hmr_${index}`).value}</td>
-        <td>${document.getElementById(`call_${index}`).value}</td>
-        <td>${document.getElementById(`ps_${index}`).value}</td>
-        <td>${document.getElementById(`status_${index}`).value}</td>
-        
-        <td>${document.getElementById(`callid_${index}`).value}</td>
-        <td>${document.getElementById(`labour_${index}`).value}</td>
-       
-      </tr>
-    `;
+    else {
+      alert("Finalization failed ❗");
+      hideLoader();
+    }
   });
-
-  const printWindow = window.open("", "_blank");
-
-  printWindow.document.write(`
-    <html>
-    <head>
-      <title>Deputation Report</title>
-      <style>
-        @page { size: A4 landscape; margin: 12mm; }
-      
-        body { 
-          font-family: Arial; 
-          font-size: 9px; 
-        }
-      
-        h2 { 
-          text-align: center; 
-          margin-bottom: 10px; 
-          font-size: 13px;
-        }
-      
-        table { 
-          width: 100%; 
-          border-collapse: collapse; 
-        }
-      
-        th, td { 
-          border: 1px solid #000; 
-          padding: 3px; 
-          text-align: center; 
-          font-size: 8.5px;
-        }
-      
-        th { 
-          background: #f0f0f0; 
-          font-weight: bold;
-        }
-      
-        .footer {
-          margin-top: 15px;
-          display: flex;
-          justify-content: space-between;
-        }
-      
-        .summary {
-           font-size: 8.5px;
-           font-weight: 600;
-         }
-      </style>
-    </head>
-    <body>
-
-      <h2>
-        SERVICE ENGINEER DEPUTATION CHART & DAILY REPORT FOR ${branch}  
-        <br>
-        DATE: ${today}
-      </h2>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Engineer</th>
-            <th>W/O</th>
-            <th>Machine No</th>
-            <th>Customer</th>
-            <th>Contact No</th>
-            <th>Complaint</th>
-            <th>HMR</th>
-            <th>Call Type</th>
-            <th>P/S</th>
-            <th>Status</th>
-            
-            <th>Call ID</th>
-            <th>Labour</th>
-            
-          </tr>
-        </thead>
-        <tbody>
-          ${tableRows}
-        </tbody>
-      </table>
-
-      <div class="footer">
-        <div class="summary">
-           <strong>Deputation Summary:</strong>
-           Onsite: ${onsite} |
-           Workshop: ${workshop} |
-           Absent: ${absent} |
-           Leave: ${leave} |
-           Free: ${free}
-         </div>
-
-        <div>
-          <strong>Report Print Date & Time:</strong><br>
-          ${printTime}
-        </div>
-      </div>
-
-    </body>
-    </html>
-  `);
-
-  printWindow.document.close();
-  printWindow.focus();
-  printWindow.print();
 }
 
 
@@ -1177,6 +1053,156 @@ function unlockDeputationTable() {
     addBtn.style.opacity = "1";
     addBtn.style.cursor = "pointer";
   }
+}
+
+
+function printReport() {
+
+  const branch = document.getElementById("branchHiddenTitle").innerText;
+  const today = new Date().toLocaleDateString();
+  const printTime = new Date().toLocaleString();
+
+  const rows = document.querySelectorAll("#tableBody tr");
+
+  let onsite = 0, workshop = 0, absent = 0, leave = 0, free = 0;
+  let tableRows = "";
+
+  rows.forEach((row, index) => {
+
+    const engineer =
+      row.getAttribute("data-engineer") ||
+      (document.getElementById(`engineer_${index}`)?.value || "");
+
+    const wo = document.getElementById(`wo_${index}`)?.value;
+
+    if (!engineer || !wo) return;
+
+    if (wo === "Onsite") onsite++;
+    if (wo === "Workshop") workshop++;
+    if (wo === "Absent") absent++;
+    if (wo === "Leave") leave++;
+    if (wo === "Free") free++;
+
+    tableRows += `
+      <tr>
+        <td>${engineer}</td>
+        <td>${wo}</td>
+        <td>${document.getElementById(`machine_${index}`)?.value || ""}</td>
+        <td>${document.getElementById(`customer_${index}`)?.value || ""}</td>
+        <td>${document.getElementById(`contact_${index}`)?.value || ""}</td>
+        <td>${document.getElementById(`complaint_${index}`)?.value || ""}</td>
+        <td>${document.getElementById(`hmr_${index}`)?.value || ""}</td>
+        <td>${document.getElementById(`call_${index}`)?.value || ""}</td>
+        <td>${document.getElementById(`ps_${index}`)?.value || ""}</td>
+        <td>${document.getElementById(`status_${index}`)?.value || ""}</td>
+        <td>${document.getElementById(`callid_${index}`)?.value || ""}</td>
+        <td>${document.getElementById(`labour_${index}`)?.value || ""}</td>
+      </tr>
+    `;
+  });
+
+  const printWindow = window.open("", "_blank");
+
+  printWindow.document.write(`
+    <html>
+    <head>
+      <title>Deputation Report</title>
+      <style>
+        @page { size: A4 landscape; margin: 12mm; }
+
+        body { 
+          font-family: Arial; 
+          font-size: 9px; 
+        }
+
+        h2 { 
+          text-align: center; 
+          margin-bottom: 10px; 
+          font-size: 13px;
+        }
+
+        table { 
+          width: 100%; 
+          border-collapse: collapse; 
+        }
+
+        th, td { 
+          border: 1px solid #000; 
+          padding: 3px; 
+          text-align: center; 
+          font-size: 8.5px;
+        }
+
+        th { 
+          background: #f0f0f0; 
+          font-weight: bold;
+        }
+
+        .footer {
+          margin-top: 15px;
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .summary {
+          font-size: 8.5px;
+          font-weight: 600;
+        }
+      </style>
+    </head>
+    <body>
+
+      <h2>
+        SERVICE ENGINEER DEPUTATION CHART & DAILY REPORT FOR ${branch}  
+        <br>
+        DATE: ${today}
+      </h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Engineer</th>
+            <th>W/O</th>
+            <th>Machine No</th>
+            <th>Customer</th>
+            <th>Contact No</th>
+            <th>Complaint</th>
+            <th>HMR</th>
+            <th>Call Type</th>
+            <th>P/S</th>
+            <th>Status</th>
+            <th>Call ID</th>
+            <th>Labour</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tableRows}
+        </tbody>
+      </table>
+
+      <div class="footer">
+        <div class="summary">
+          <strong>Deputation Summary:</strong>
+          Onsite: ${onsite} |
+          Workshop: ${workshop} |
+          Absent: ${absent} |
+          Leave: ${leave} |
+          Free: ${free}
+        </div>
+
+        <div>
+          <strong>Report Print Date & Time:</strong><br>
+          ${printTime}
+        </div>
+      </div>
+
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
 }
 
 
