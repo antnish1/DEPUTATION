@@ -567,3 +567,15 @@ html, body {
 .floating-save-btn:active {
   transform: translateY(0px);
 }
+
+
+/* Hide animation */
+.floating-save-btn.hide-on-scroll {
+  transform: translateY(120%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.floating-save-btn {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
