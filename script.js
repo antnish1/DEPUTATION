@@ -3,6 +3,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbwNibttN_UDKbhMsva3n6qZ
 const NON_DEPUTATION_WORK_TYPES = ["Free", "Leave", "Absent"];
 let currentBranchEngineers = [];
 let hasUnsavedChanges = false;
+let isFinalized = false;
 /* ===============================
    GLOBAL LOADER CONTROL
 ================================= */
@@ -53,6 +54,9 @@ function loadBranch(branch) {
      return;
    }
 
+   isFinalized = false;
+
+   
   showLoader("Loading branch data...");
   document.getElementById("saveAllBtn").disabled = false;
   // Show hidden content
@@ -688,6 +692,12 @@ function showManualCustomerPopup(index) {
 
 function addAdditionalRow() {
 
+
+   if (isFinalized) {
+     alert("This branch report has been finalized. Editing is locked.");
+     return;
+   }
+   
   const tbody = document.getElementById("tableBody");
   const newIndex = document.querySelectorAll("#tableBody tr").length;
 
@@ -918,6 +928,12 @@ function forceSave() {
 
 function finalizeAndPrint() {
 
+
+   if (!isFinalized) {
+     lockDeputationTable();
+     isFinalized = true;
+   }
+   
   const branch = document.getElementById("branchHiddenTitle").innerText;
   const today = new Date().toLocaleDateString();
   const printTime = new Date().toLocaleString();
@@ -1071,6 +1087,45 @@ function finalizeAndPrint() {
 }
 
 
+
+/* ===============================
+   LOCK TABLE AFTER FINALIZE
+================================= */
+
+function lockDeputationTable() {
+
+  const rows = document.querySelectorAll("#tableBody tr");
+
+  rows.forEach((row) => {
+
+    const inputs = row.querySelectorAll("input, select");
+
+    inputs.forEach((field) => {
+      field.disabled = true;
+    });
+
+    row.style.opacity = "0.85";
+  });
+
+  // Disable Save button
+  const saveBtn = document.getElementById("saveAllBtn");
+  if (saveBtn) {
+    saveBtn.disabled = true;
+    saveBtn.innerText = "Finalized";
+    saveBtn.style.background = "#64748b";
+  }
+
+  // Disable Add Additional Call button
+  const addBtn = document.getElementById("addRowBtn");
+  if (addBtn) {
+    addBtn.disabled = true;
+    addBtn.style.opacity = "0.6";
+    addBtn.style.cursor = "not-allowed";
+  }
+
+  // Prevent further edits flag
+  hasUnsavedChanges = false;
+}
 
 
 window.addEventListener("beforeunload", function (e) {
