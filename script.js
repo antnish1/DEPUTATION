@@ -489,15 +489,17 @@ function applyRowLockState(row, index) {
 /* ===============================
    SAVE ALL ENGINEERS
 ================================= */
+/* ===============================
+   SAVE ALL ENGINEERS
+================================= */
 async function saveAll() {
 
-   return new Promise((resolve, reject) => {
   const saveBtn = document.getElementById("saveAllBtn");
   const rows = document.querySelectorAll("#tableBody tr");
 
   if (!rows.length) {
     alert("No engineers loaded ❗");
-    return;
+    throw new Error("No engineers");
   }
 
   showLoader("Saving data...");
@@ -514,41 +516,33 @@ async function saveAll() {
     row.classList.remove("missing");
 
     let engineer = row.getAttribute("data-engineer");
-   
-   if (!engineer) {
-     const engineerDropdown = row.querySelector("select[id^='engineer_']");
-     engineer = engineerDropdown ? engineerDropdown.value : "";
-   }
 
-   // 🚨 Prevent saving additional row if engineer not selected
-   if (!engineer) {
-     skippedCount++;
-     row.classList.add("missing");
-     return;
-   }  
+    if (!engineer) {
+      const engineerDropdown = row.querySelector("select[id^='engineer_']");
+      engineer = engineerDropdown ? engineerDropdown.value : "";
+    }
+
+    if (!engineer) {
+      skippedCount++;
+      row.classList.add("missing");
+      return;
+    }
+
     const machineNo = document.getElementById(`machine_${index}`).value.trim();
     const workType = document.getElementById(`wo_${index}`).value;
     const isNonDeputationType = shouldLockRowByWorkType(workType);
-
     const complaint = document.getElementById(`complaint_${index}`).value.trim();
 
-      let isRowInvalid = false;
-      
-      // 🚨 Complaint is ALWAYS mandatory
-      if (!complaint) {
-        isRowInvalid = true;
-      }
-      
-      // 🚨 Machine No mandatory ONLY if not Free/Leave/Absent
-      if (!machineNo && !isNonDeputationType) {
-        isRowInvalid = true;
-      }
-      
-      if (isRowInvalid) {
-        skippedCount++;
-        row.classList.add("missing");
-        return;
-      }
+    let isRowInvalid = false;
+
+    if (!complaint) isRowInvalid = true;
+    if (!machineNo && !isNonDeputationType) isRowInvalid = true;
+
+    if (isRowInvalid) {
+      skippedCount++;
+      row.classList.add("missing");
+      return;
+    }
 
     const payload = {
       officeLocation: branch,
@@ -572,20 +566,16 @@ async function saveAll() {
     const request = fetch(API_URL, {
       method: "POST",
       body: JSON.stringify(payload)
-    })
-      .then(res => res.json())
-      .then(response => ({ response, row }));
+    }).then(res => res.json());
 
     savePromises.push(request);
   });
 
-  // 🚨 FIX: Handle empty saves BEFORE waiting
   if (!savePromises.length) {
-    hideLoader();  // ✅ IMPORTANT FIX
-    showSummaryPopup(0, 0, skippedCount);
+    hideLoader();
     saveBtn.disabled = false;
     saveBtn.innerText = "Save Changes";
-    return;
+    throw new Error("Nothing to save");
   }
 
   try {
@@ -595,40 +585,47 @@ async function saveAll() {
     let successCount = 0;
     let duplicateCount = 0;
 
-    results.forEach(({ response, row }) => {
+    results.forEach((response, index) => {
+
+      const row = rows[index];
+
       if (response.status === "success") {
         successCount++;
         row.style.opacity = "0.6";
-      } else if (response.status === "updated") {
+      }
+      else if (response.status === "updated") {
         successCount++;
         row.style.border = "2px solid orange";
-      } else if (response.status === "duplicate") {
+      }
+      else if (response.status === "duplicate") {
         duplicateCount++;
         row.style.border = "2px solid red";
+      }
+      else if (response.status === "locked") {
+        throw new Error("Branch finalized");
       }
     });
 
     showSummaryPopup(successCount, duplicateCount, skippedCount);
 
-      if (successCount > 0 || duplicateCount > 0) {
-        resolve({ status: "success" });
-      } else {
-        reject({ status: "failed" });
-      }
-     
-     hasUnsavedChanges = false;
+    hasUnsavedChanges = false;
+
+    return { status: "success" };
 
   } catch (error) {
+
     console.error("Save error:", error);
-    alert("Unexpected error occurred ❗");
+    alert("Save failed ❗");
+
+    throw error;
+
+  } finally {
+
+    hideLoader();
+    saveBtn.disabled = false;
+    saveBtn.innerText = "Save Changes";
   }
-
-  // ✅ Always clean up
-  hideLoader();
-  saveBtn.disabled = false;
-  saveBtn.innerText = "Save Changes";
 }
-
 /* ===============================
    POPUP FUNCTIONS
 ================================= */
