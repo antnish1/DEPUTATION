@@ -491,6 +491,7 @@ function applyRowLockState(row, index) {
 ================================= */
 async function saveAll() {
 
+   return new Promise((resolve, reject) => {
   const saveBtn = document.getElementById("saveAllBtn");
   const rows = document.querySelectorAll("#tableBody tr");
 
@@ -608,6 +609,13 @@ async function saveAll() {
     });
 
     showSummaryPopup(successCount, duplicateCount, skippedCount);
+
+      if (successCount > 0 || duplicateCount > 0) {
+        resolve({ status: "success" });
+      } else {
+        reject({ status: "failed" });
+      }
+     
      hasUnsavedChanges = false;
 
   } catch (error) {
@@ -945,37 +953,55 @@ function forceSave() {
    FINALIZE & PRINT REPORT
 ================================= */
 
-function finalizeAndPrint() {
+async function finalizeAndPrint() {
 
   const branch = document.getElementById("branchHiddenTitle").innerText;
 
+  if (hasUnsavedChanges) {
+
+    showLoader("Saving changes before finalizing...");
+
+    try {
+      await saveAll();
+    } catch (error) {
+      hideLoader();
+      alert("Save failed. Cannot finalize ❗");
+      return;
+    }
+  }
+
   showLoader("Finalizing branch...");
 
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "finalizeBranch",
-      branch: branch
-    })
-  })
-  .then(res => res.json())
-  .then(response => {
+  try {
 
-    if (response.status === "success") {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "finalizeBranch",
+        branch: branch
+      })
+    });
+
+    const result = await response.json();
+
+    hideLoader();
+
+    if (result.status === "success" || result.status === "locked") {
 
       lockDeputationTable();
-
-      hideLoader();
-
-      // Now print
       printReport();
     }
 
     else {
       alert("Finalization failed ❗");
-      hideLoader();
     }
-  });
+
+  } catch (err) {
+
+    hideLoader();
+    alert("Server error during finalization ❗");
+    console.error(err);
+  }
 }
 
 
