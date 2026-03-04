@@ -68,19 +68,32 @@ padding:12px 30px 20px 30px;
 ========================= */
 
 .topbar{
-background:white;
-padding:14px 20px;
+
+background:#0f172a;
+
+color:white;
+
+padding:12px 20px;
+
 border-radius:10px;
+
 display:flex;
-justify-content:space-between;
+
 align-items:center;
-box-shadow:0 4px 20px rgba(0,0,0,.05);
-margin-bottom:25px;
+
+justify-content:space-between;
+
+box-shadow:0 6px 18px rgba(0,0,0,.15);
+
+margin-bottom:6px;
+
 }
 
 .topbar h1{
+color:white;
 font-size:16px;
 margin:0;
+font-weight:500;
 }
 
 /* =========================
