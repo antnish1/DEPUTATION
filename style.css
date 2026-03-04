@@ -189,7 +189,7 @@ body{
 
   box-shadow:0 10px 30px rgba(0,0,0,.08);
 
-  font-size:13px;
+  font-size:12px;
 
 }
 
@@ -207,13 +207,12 @@ body{
 
   border:1px solid var(--border);
 
-  padding:6px;
+  padding:5px;
 
   text-align:center;
 
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
+  white-space:normal;
+
 }
 
 /* =========================
@@ -229,9 +228,9 @@ body{
 
   border-radius:5px;
 
-  font-size:12px;
+  font-size:11px;
 
-  padding:4px;
+  padding:3px;
 
   transition:.15s ease;
 }
