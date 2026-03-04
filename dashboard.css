@@ -194,3 +194,29 @@ color:white;
 background:#eff6ff;
 transform:translateY(-2px);
 }
+
+/* =========================
+   COLLAPSIBLE SIDEBAR
+========================= */
+
+.sidebar.collapsed{
+width:70px;
+}
+
+.sidebar.collapsed .logo{
+display:none;
+}
+
+.sidebar.collapsed .nav a span{
+display:none;
+}
+
+.sidebar.collapsed .nav a{
+justify-content:center;
+}
+
+/* MAIN AREA ADJUST */
+
+.layout.collapsed .main{
+padding-left:20px;
+}
