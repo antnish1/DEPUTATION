@@ -336,3 +336,46 @@ color:white;
 #contentArea{
 width:100%;
 }
+
+
+/* =========================
+   BRANCH SUBMENU
+========================= */
+
+.nav-parent{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+padding:10px 12px;
+border-radius:6px;
+cursor:pointer;
+color:#cbd5e1;
+font-size:13px;
+}
+
+.nav-parent:hover{
+background:#1e293b;
+color:white;
+}
+
+.dropdown-arrow{
+font-size:11px;
+}
+
+.branch-submenu{
+display:none;
+flex-direction:column;
+margin-left:20px;
+}
+
+.branch-submenu a{
+padding:7px 10px;
+font-size:12px;
+color:#cbd5e1;
+cursor:pointer;
+}
+
+.branch-submenu a:hover{
+color:white;
+}
