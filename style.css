@@ -189,9 +189,8 @@ body{
 
   box-shadow:0 10px 30px rgba(0,0,0,.08);
 
-  table-layout:fixed;
-
   font-size:13px;
+
 }
 
 #deputationTable th{
@@ -598,4 +597,45 @@ select:focus{
   .floating-print-btn{
     right:140px;
   }
+}
+
+
+
+.customer-wrapper{
+  position:relative;
+}
+
+.customer-wrapper input{
+  width:100%;
+  padding-right:28px;
+  box-sizing:border-box;
+}
+
+.customer-spinner{
+
+  position:absolute;
+
+  right:6px;
+
+  top:50%;
+
+  width:14px;
+  height:14px;
+
+  margin-top:-7px;
+
+  border:2px solid #ccc;
+  border-top:2px solid #2c3e50;
+
+  border-radius:50%;
+
+  animation:spinCustomer 0.7s linear infinite;
+}
+
+@keyframes spinCustomer{
+
+  from { transform:rotate(0deg); }
+
+  to { transform:rotate(360deg); }
+
 }
