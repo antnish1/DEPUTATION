@@ -220,3 +220,7 @@ justify-content:center;
 .layout.collapsed .main{
 padding-left:20px;
 }
+
+.sidebar{
+transition:width .25s ease;
+}
