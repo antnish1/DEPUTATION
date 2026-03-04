@@ -37,9 +37,10 @@ body{
 ========================= */
 
 .main-content{
-  padding:25px;
-  max-width:1600px;
-  margin:auto;
+width:100%;
+max-width:100%;
+margin:0;
+padding:0;
 }
 
 /* =========================
@@ -173,8 +174,6 @@ width:100%;
 
 overflow-x:auto;
 
-border-radius:8px;
-
 }
 /* =========================
    INDUSTRY TABLE
@@ -184,9 +183,9 @@ border-radius:8px;
 
 width:100%;
 
-border-collapse:collapse;
+min-width:100%;
 
-font-size:12px;
+border-collapse:collapse;
 
 }
 
@@ -760,17 +759,19 @@ gap:10px;
 
 .module-card{
 
+width:100%;
+
+max-width:100%;
+
 background:white;
 
 border-radius:10px;
 
-padding:12px;
+padding:10px;
+
+margin-top:4px;
 
 box-shadow:0 6px 18px rgba(0,0,0,.08);
-
-width:100%;
-
-margin-top:6px;
 
 }
 
