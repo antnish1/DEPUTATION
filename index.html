@@ -124,7 +124,10 @@ container.innerHTML = html;
 });
 
 /* update page title */
-document.getElementById("pageTitle").innerText = title;
+const titleElement = document.getElementById("pageTitle");
+if(titleElement){
+titleElement.innerText = title;
+}
 
 /* sidebar active state */
 
