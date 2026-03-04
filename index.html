@@ -8,7 +8,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
@@ -66,9 +65,6 @@ color:white;
 
 /* MAIN AREA */
 
-
-
-  
 .main{
 flex:1;
 padding:25px 30px;
@@ -92,98 +88,6 @@ font-size:16px;
 margin:0;
 }
 
-/* STATS */
-
-.stats{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:16px;
-margin-bottom:25px;
-}
-
-.card{
-background:white;
-padding:18px;
-border-radius:10px;
-box-shadow:0 4px 20px rgba(0,0,0,.06);
-transition:.2s;
-}
-
-.card:hover{
-transform:translateY(-2px);
-}
-
-.card h2{
-font-size:22px;
-margin:0;
-color:#2563eb;
-}
-
-.card p{
-font-size:12px;
-color:#64748b;
-margin-top:4px;
-}
-
-/* QUICK ACTIONS */
-
-.actions{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:16px;
-margin-bottom:30px;
-}
-
-.action{
-background:white;
-padding:20px;
-border-radius:10px;
-text-align:center;
-cursor:pointer;
-box-shadow:0 4px 20px rgba(0,0,0,.06);
-transition:.2s;
-}
-
-.action i{
-font-size:20px;
-margin-bottom:6px;
-color:#2563eb;
-}
-
-.action p{
-margin:0;
-font-size:13px;
-}
-
-.action:hover{
-background:#eff6ff;
-transform:translateY(-2px);
-}
-
-/* BRANCH GRID */
-
-.branch-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-gap:14px;
-}
-
-.branch{
-background:white;
-padding:16px;
-border-radius:8px;
-text-align:center;
-cursor:pointer;
-box-shadow:0 4px 20px rgba(0,0,0,.06);
-font-size:13px;
-transition:.2s;
-}
-
-.branch:hover{
-background:#eff6ff;
-transform:translateY(-2px);
-}
-
 </style>
 
 </head>
@@ -202,22 +106,18 @@ Service System
 
 <div class="nav">
 
-<a href="#" onclick="loadPage('dashboard-content.html')">
+<a href="#" onclick="loadPage('dashboard-content.html','Dashboard')">
 <i class="fa fa-home"></i>Dashboard
 </a>
 
-<a href="#" onclick="loadPage('deputation.html')">
+<a href="#" onclick="loadPage('deputation.html','Engineer Deputation')">
 <i class="fa fa-clipboard-list"></i>Deputation
 </a>
 
 <a href="#"><i class="fa fa-user-cog"></i>Engineers</a>
-
 <a href="#"><i class="fa fa-tractor"></i>Machines</a>
-
 <a href="#"><i class="fa fa-users"></i>Customers</a>
-
 <a href="#"><i class="fa fa-chart-bar"></i>Reports</a>
-
 <a href="#"><i class="fa fa-gear"></i>Settings</a>
 
 </div>
@@ -225,10 +125,12 @@ Service System
 </div>
 
 <!-- MAIN CONTENT -->
+
 <div class="main">
 
 <div class="topbar">
 <h1 id="pageTitle">Dashboard</h1>
+<div><i class="fa fa-bell"></i></div>
 </div>
 
 <div id="contentArea"></div>
@@ -237,78 +139,9 @@ Service System
 
 </div>
 
-<!-- STATS -->
-
-<div class="stats">
-
-<div class="card">
-<h2>14</h2>
-<p>Engineers Onsite</p>
-</div>
-
-<div class="card">
-<h2>6</h2>
-<p>Workshop Engineers</p>
-</div>
-
-<div class="card">
-<h2>22</h2>
-<p>Active Calls</p>
-</div>
-
-<div class="card">
-<h2>5</h2>
-<p>Branches Active</p>
-</div>
-
-</div>
-
-<!-- QUICK ACTIONS -->
-
-<div class="actions">
-
-<div class="action" onclick="loadPage('deputation.html')">
-<i class="fa fa-clipboard-list"></i>
-<p>Open Deputation</p>
-</div>
-
-<div class="action">
-<i class="fa fa-user-cog"></i>
-<p>Manage Engineers</p>
-</div>
-
-<div class="action">
-<i class="fa fa-tractor"></i>
-<p>Machine Database</p>
-</div>
-
-<div class="action">
-<i class="fa fa-chart-bar"></i>
-<p>View Reports</p>
-</div>
-
-</div>
-
-<h3 style="margin-bottom:10px;">Branches</h3>
-
-<div class="branch-grid">
-
-<div class="branch" onclick="openBranch()">DAMOH</div>
-<div class="branch">SEONI</div>
-<div class="branch">MANDLA</div>
-<div class="branch">KATNI</div>
-<div class="branch">BALAGHAT</div>
-<div class="branch">ANUPPUR</div>
-
-</div>
-
-</div>
-
-</div>
-
 <script>
 
-function loadPage(page){
+function loadPage(page,title){
 
 const container = document.getElementById("contentArea");
 
@@ -318,10 +151,12 @@ fetch(page)
 container.innerHTML = html;
 });
 
+document.getElementById("pageTitle").innerText = title;
+
 }
 
-window.onload = function(){
-loadPage("dashboard-content.html");
+window.onload=function(){
+loadPage("dashboard-content.html","Dashboard");
 }
 
 </script>
