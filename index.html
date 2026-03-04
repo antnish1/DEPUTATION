@@ -210,9 +210,13 @@ Service System
 
 <div class="nav">
 
-<a href="#"><i class="fa fa-home"></i>Dashboard</a>
+<a href="#" onclick="loadPage('dashboard-content.html')">
+<i class="fa fa-home"></i>Dashboard
+</a>
 
-<a href="deputation.html"><i class="fa fa-clipboard-list"></i>Deputation</a>
+<a href="#" onclick="loadPage('deputation.html')">
+<i class="fa fa-clipboard-list"></i>Deputation
+</a>
 
 <a href="#"><i class="fa fa-user-cog"></i>Engineers</a>
 
@@ -313,12 +317,20 @@ Service System
 
 <script>
 
-function openDeputation(){
-window.location.href="deputation.html";
+function loadPage(page){
+
+const container = document.getElementById("contentArea");
+
+fetch(page)
+.then(res => res.text())
+.then(html=>{
+container.innerHTML = html;
+});
+
 }
 
-function openBranch(){
-window.location.href="deputation.html";
+window.onload = function(){
+loadPage("dashboard-content.html");
 }
 
 </script>
