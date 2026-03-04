@@ -301,6 +301,38 @@ transition:width .25s ease;
 }
 
 
+/* =========================
+   SIDEBAR HEADER
+========================= */
+
+.sidebar-header{
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+margin-bottom:25px;
+
+}
+
+.sidebar-toggle{
+
+cursor:pointer;
+
+font-size:16px;
+
+color:#cbd5e1;
+
+}
+
+.sidebar-toggle:hover{
+
+color:white;
+
+}
+
 #contentArea{
 width:100%;
 }
