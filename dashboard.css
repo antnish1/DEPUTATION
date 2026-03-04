@@ -177,6 +177,19 @@ font-size:13px;
 transition:.2s;
 }
 
+/* =========================
+   ACTIVE SIDEBAR ITEM
+========================= */
+
+.nav a.active{
+background:#2563eb;
+color:white;
+}
+
+.nav a.active i{
+color:white;
+}
+
 .branch:hover{
 background:#eff6ff;
 transform:translateY(-2px);
