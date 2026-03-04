@@ -100,11 +100,9 @@ FCV DEPUTATION
 
 <div class="main">
 
-
+<div id="contentArea"></div>
 
 </div>
-
-<div id="contentArea"></div>
 
 </div>
 
@@ -115,7 +113,7 @@ FCV DEPUTATION
 function loadPage(page,title,element){
 
 const container = document.getElementById("contentArea");
-const controls = document.getElementById("moduleControls");
+const controls = document.getElementById("moduleControls") || {innerHTML:""};
 
 fetch(page)
 .then(res => res.text())
