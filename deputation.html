@@ -1,29 +1,29 @@
-<!-- =========================
-     TOP MENU BAR
-========================= -->
+<div class="module-header">
 
-<div class="top-menu">
+<h2>Engineer Deputation</h2>
 
-<div class="menu-left">
-<div class="menu-item dropdown">
+<div class="module-actions">
 
-<span id="deputationMenuLabel">Deputation ▾</span>
+<select id="branchSelector" onchange="loadBranch(this.value)">
 
-<div class="dropdown-content">
+<option value="">Select Branch</option>
+<option value="DAMOH">DAMOH</option>
+<option value="DINDORI">DINDORI</option>
+<option value="SEONI">SEONI</option>
+<option value="ANUPPUR">ANUPPUR</option>
+<option value="BALAGHAT">BALAGHAT</option>
+<option value="KATNI">KATNI</option>
+<option value="JABALPUR BHL">JABALPUR BHL</option>
+<option value="MANDLA">MANDLA</option>
+<option value="NARSINGHPUR">NARSINGHPUR</option>
+<option value="JABALPUR HL">JABALPUR HL</option>
 
-<div onclick="loadBranch('DAMOH')">DAMOH</div>
-<div onclick="loadBranch('DINDORI')">DINDORI</div>
-<div onclick="loadBranch('SEONI')">SEONI</div>
-<div onclick="loadBranch('ANUPPUR')">ANUPPUR</div>
-<div onclick="loadBranch('BALAGHAT')">BALAGHAT</div>
-<div onclick="loadBranch('KATNI')">KATNI</div>
-<div onclick="loadBranch('JABALPUR BHL')">JABALPUR BHL</div>
-<div onclick="loadBranch('MANDLA')">MANDLA</div>
-<div onclick="loadBranch('NARSINGHPUR')">NARSINGHPUR</div>
-<div onclick="loadBranch('JABALPUR HL')">JABALPUR HL</div>
+</select>
 
-</div>
-</div>
+<button class="save-btn" onclick="addAdditionalRow()">
++ Add Call
+</button>
+
 </div>
 
 </div>
@@ -42,12 +42,13 @@
 </div>
 </div>
 
+<div class="module-card">
+
 <div class="table-wrapper">
 
 <table id="deputationTable">
 
 <thead>
-
 <tr>
 <th>Engineer</th>
 <th>W/O</th>
@@ -65,12 +66,13 @@
 <th>Labour</th>
 <th>TA DA</th>
 </tr>
-
 </thead>
 
 <tbody id="tableBody"></tbody>
 
 </table>
+
+</div>
 
 </div>
 
