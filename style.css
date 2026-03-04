@@ -168,28 +168,25 @@ body{
 ========================= */
 
 .table-wrapper{
-  width:100%;
-  overflow-x:auto;
-}
 
+width:100%;
+
+overflow-x:auto;
+
+border-radius:8px;
+
+}
 /* =========================
    INDUSTRY TABLE
 ========================= */
 
 #deputationTable{
 
-  width:100%;
-  border-collapse:collapse;
+width:100%;
 
-  background:white;
+border-collapse:collapse;
 
-  border-radius:10px;
-
-  overflow:hidden;
-
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
-
-  font-size:12px;
+font-size:12px;
 
 }
 
