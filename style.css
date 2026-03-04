@@ -575,6 +575,11 @@ select:focus{
   }
 }
 
+.hidden{
+  display:none;
+}
+
+
 /* =========================
    MOBILE RESPONSIVE
 ========================= */
