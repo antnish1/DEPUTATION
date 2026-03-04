@@ -115,7 +115,8 @@ body{
 
   position:absolute;
 
-  top:50px;
+  top:100%;          /* attaches dropdown directly to menu */
+
   left:0;
 
   background:white;
@@ -133,6 +134,7 @@ body{
   overflow:hidden;
 
   animation:dropdownFade .2s ease;
+
 }
 
 .dropdown-content div{
