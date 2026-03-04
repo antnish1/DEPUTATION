@@ -299,3 +299,8 @@ font-size:16px;
 .sidebar{
 transition:width .25s ease;
 }
+
+
+#contentArea{
+width:100%;
+}
