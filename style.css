@@ -215,6 +215,91 @@ body{
 
 }
 
+
+
+
+/* =========================
+   COLUMN WIDTHS
+========================= */
+
+#deputationTable th:nth-child(1),
+#deputationTable td:nth-child(1){
+  width:170px; /* Engineer */
+}
+
+#deputationTable th:nth-child(2),
+#deputationTable td:nth-child(2){
+  width:60px; /* W/O */
+}
+
+#deputationTable th:nth-child(3),
+#deputationTable td:nth-child(3){
+  width:80px; /* Machine No */
+}
+
+#deputationTable th:nth-child(4),
+#deputationTable td:nth-child(4){
+  width:200px; /* Customer */
+}
+
+#deputationTable th:nth-child(5),
+#deputationTable td:nth-child(5){
+  width:100px; /* Contact */
+}
+
+#deputationTable th:nth-child(6),
+#deputationTable td:nth-child(6){
+  width:260px; /* Complaint */
+}
+
+#deputationTable th:nth-child(7),
+#deputationTable td:nth-child(7){
+  width:60px; /* HMR */
+}
+
+#deputationTable th:nth-child(8),
+#deputationTable td:nth-child(8){
+  width:90px; /* Call Type */
+}
+
+#deputationTable th:nth-child(9),
+#deputationTable td:nth-child(9){
+  width:90px; /* P/S */
+}
+
+#deputationTable th:nth-child(10),
+#deputationTable td:nth-child(10){
+  width:140px; /* Status */
+}
+
+#deputationTable th:nth-child(11),
+#deputationTable td:nth-child(11){
+  width:200px; /* M/C Location */
+}
+
+#deputationTable th:nth-child(12),
+#deputationTable td:nth-child(12){
+  width:70px; /* KM */
+}
+
+#deputationTable th:nth-child(13),
+#deputationTable td:nth-child(13){
+  width:120px; /* Call ID */
+}
+
+#deputationTable th:nth-child(14),
+#deputationTable td:nth-child(14){
+  width:90px; /* Labour */
+}
+
+#deputationTable th:nth-child(15),
+#deputationTable td:nth-child(15){
+  width:90px; /* TA DA */
+}
+
+
+
+
 /* =========================
    INPUT STYLING
 ========================= */
@@ -233,6 +318,8 @@ body{
   padding:3px;
 
   transition:.15s ease;
+
+  white-space:normal;
 }
 
 input:focus,
