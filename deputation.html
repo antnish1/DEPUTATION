@@ -1,131 +1,134 @@
-
-
 <!-- =========================
      TOP MENU BAR
 ========================= -->
+
 <div class="top-menu">
 
-  <div class="menu-left">
-    <div class="menu-item dropdown">
-      <span id="deputationMenuLabel">Deputation ▾</span>
-      <div class="dropdown-content">
-        <div onclick="loadBranch('DAMOH')">DAMOH</div>
-        <div onclick="loadBranch('DINDORI')">DINDORI</div>
-        <div onclick="loadBranch('SEONI')">SEONI</div>
-        <div onclick="loadBranch('ANUPPUR')">ANUPPUR</div>
-        <div onclick="loadBranch('BALAGHAT')">BALAGHAT</div>
-        <div onclick="loadBranch('KATNI')">KATNI</div>
-        <div onclick="loadBranch('JABALPUR BHL')">JABALPUR BHL</div>
-        <div onclick="loadBranch('MANDLA')">MANDLA</div>
-        <div onclick="loadBranch('NARSINGHPUR')">NARSINGHPUR</div>
-        <div onclick="loadBranch('JABALPUR HL')">JABALPUR HL</div>
-      </div>
-    </div>
-  </div>
+<div class="menu-left">
+<div class="menu-item dropdown">
 
+<span id="deputationMenuLabel">Deputation ▾</span>
 
+<div class="dropdown-content">
+
+<div onclick="loadBranch('DAMOH')">DAMOH</div>
+<div onclick="loadBranch('DINDORI')">DINDORI</div>
+<div onclick="loadBranch('SEONI')">SEONI</div>
+<div onclick="loadBranch('ANUPPUR')">ANUPPUR</div>
+<div onclick="loadBranch('BALAGHAT')">BALAGHAT</div>
+<div onclick="loadBranch('KATNI')">KATNI</div>
+<div onclick="loadBranch('JABALPUR BHL')">JABALPUR BHL</div>
+<div onclick="loadBranch('MANDLA')">MANDLA</div>
+<div onclick="loadBranch('NARSINGHPUR')">NARSINGHPUR</div>
+<div onclick="loadBranch('JABALPUR HL')">JABALPUR HL</div>
+
+</div>
+</div>
+</div>
 
 </div>
 
 <!-- =========================
      MAIN CONTENT
 ========================= -->
+
 <div class="main-content">
 
-  <div id="branchContent" style="display:none;">
+<div id="branchContent" style="display:none;">
 
-    <div class="branch-toolbar">
-      <div class="branch-info">
-        <span id="branchHiddenTitle" style="display:none;"></span>
-      </div>
-  
-      
-    </div>
-  
-    <div class="table-wrapper">
-      <table id="deputationTable">
-        <thead>
-          <tr>
-            <th>Engineer</th>
-            <th>W/O</th>
-            <th>Machine No <span class="required-star">*</span></th>
-            <th>Customer</th>
-            <th>Contact No</th>
-            <th>Complaint <span class="required-star">*</span></th>
-            <th>HMR</th>
-            <th>Call Type</th>
-            <th>P/S</th>
-            <th>Status</th>
-            <th>M/C Location</th>
-            <th>KM</th>
-            <th>Call ID</th>
-            <th>Labour</th>
-            <th>TA DA</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
+<div class="branch-toolbar">
+<div class="branch-info">
+<span id="branchHiddenTitle" style="display:none;"></span>
+</div>
+</div>
 
-    <div style="margin-top:10px;">
-    <button id="addRowBtn" class="save-btn" onclick="addAdditionalRow()">
-      + Add Additional Call
-    </button>
-  </div>
+<div class="table-wrapper">
 
+<table id="deputationTable">
+
+<thead>
+
+<tr>
+<th>Engineer</th>
+<th>W/O</th>
+<th>Machine No *</th>
+<th>Customer</th>
+<th>Contact No</th>
+<th>Complaint *</th>
+<th>HMR</th>
+<th>Call Type</th>
+<th>P/S</th>
+<th>Status</th>
+<th>M/C Location</th>
+<th>KM</th>
+<th>Call ID</th>
+<th>Labour</th>
+<th>TA DA</th>
+</tr>
+
+</thead>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+
+</div>
+
+<div style="margin-top:10px;">
+<button id="addRowBtn" class="save-btn" onclick="addAdditionalRow()">
++ Add Additional Call
+</button>
+</div>
 
 <button id="printReportBtn"
-        class="floating-print-btn"
-        onclick="finalizeAndPrint()">
-  Finalize & Print
+class="floating-print-btn"
+onclick="finalizeAndPrint()">
+Finalize & Print
 </button>
-    
-    
 
-  <button id="saveAllBtn"
-          class="floating-save-btn"
-          onclick="saveAll()">
-    Save Changes
-  </button>
-    
-  </div>
+<button id="saveAllBtn"
+class="floating-save-btn"
+onclick="saveAll()">
+Save Changes
+</button>
 
-<!-- =========================
-     POPUP
-========================= -->
-<div id="popup" class="popup hidden">
-  <div class="popup-box">
-    <p id="popupText"></p>
-    <button onclick="closePopup()">OK</button>
-  </div>
 </div>
 
+</div>
+
+<!-- POPUP -->
+
+<div id="popup" class="popup hidden">
+<div class="popup-box">
+<p id="popupText"></p>
+<button onclick="closePopup()">OK</button>
+</div>
+</div>
 
 <div id="unsavedPopup" class="industry-popup hidden">
-  <div class="industry-box">
-    <h3>Unsaved Changes Detected</h3>
-    <p>Please save your changes before switching branches.</p>
-    <div class="industry-actions">
-      <button onclick="closeUnsavedPopup()">Continue Editing</button>
-      <button onclick="forceSave()">Save Now</button>
-    </div>
-  </div>
+<div class="industry-box">
+<h3>Unsaved Changes Detected</h3>
+<p>Please save your changes before switching branches.</p>
+
+<div class="industry-actions">
+<button onclick="closeUnsavedPopup()">Continue Editing</button>
+<button onclick="forceSave()">Save Now</button>
 </div>
-  
-<!-- =========================
-     GLOBAL LOADER
-========================= -->
+
+</div>
+</div>
+
+<!-- GLOBAL LOADER -->
+
 <div id="globalLoader" class="loader-overlay hidden">
-  <div class="loader-box">
-    <div class="spinner"></div>
-    <p id="loaderText">Loading...</p>
-  </div>
+
+<div class="loader-box">
+
+<div class="spinner"></div>
+<p id="loaderText">Loading...</p>
+
 </div>
 
-<!-- =========================
-     SCRIPT
-========================= -->
-<script src="script.js"></script>
+</div>
 
-</body>
-</html>
+<script src="script.js"></script>
